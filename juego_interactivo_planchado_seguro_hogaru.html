@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío Planchado Seguro con Amanda - Hogarú</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Open Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hogaru: {
+                            dark: '#004187',
+                            primary: '#0093FF',
+                            light: '#3CBDFF',
+                            soft: '#C3EDFF',
+                            bg: '#EFFBFF',
+                            green: '#10B981',
+                            orange: '#F59E0B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #EFFBFF;
+            color: #004187;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .fluid-bg {
+            background: radial-gradient(circle at 10% 20%, rgba(60, 189, 255, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(195, 237, 255, 0.4) 0%, transparent 50%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 147, 255, 0.12), 0 8px 10px -6px rgba(0, 65, 135, 0.08);
+        }
+
+        .btn-bounce {
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s ease;
+        }
+        .btn-bounce:active {
+            transform: scale(0.96);
+        }
+
+        /* Fluid line decoration according to Brand Manual */
+        .brand-curve {
+            border-radius: 50% 20% 50% 20% / 20% 50% 20% 50%;
+        }
+    </style>
+</head>
+<body class="min-h-screen fluid-bg flex flex-col justify-between p-3 md:p-6">
+
+    <header class="w-full max-w-2xl mx-auto bg-white rounded-2xl p-4 mb-4 card-shadow flex items-center justify-between border-b-4 border-hogaru-primary">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-hogaru-primary text-white flex items-center justify-center font-bold text-xl shadow">
+                <i class="fa-solid font-bold">H</i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight text-hogaru-dark">Planchado Seguro</h1>
+                <p class="text-xs text-hogaru-light font-semibold">Desafío con Amanda</p>
+            </div>
+        </div>
+
+        <!-- Score & Stars -->
+        <div class="flex items-center gap-2 bg-hogaru-bg px-3 py-1.5 rounded-full border border-hogaru-soft">
+            <i class="fa-solid fa-star text-yellow-400 text-lg"></i>
+            <span id="score-display" class="font-bold text-hogaru-dark text-base">0 / 15</span>
+        </div>
+    </header>
+
+    <main class="w-full max-w-2xl mx-auto flex-1 flex flex-col justify-center">
+
+        <!-- SCREEN 1: WELCOME SCREEN -->
+        <div id="screen-welcome" class="bg-white rounded-3xl p-6 md:p-8 card-shadow text-center relative overflow-hidden border-t-8 border-hogaru-primary">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-hogaru-soft rounded-full opacity-50 pointer-events-none"></div>
+            
+            <!-- Character Amanda Greeting -->
+            <div class="relative inline-block mb-4">
+                <div class="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full bg-hogaru-bg border-4 border-hogaru-light flex items-center justify-center overflow-hidden shadow-inner">
+                    <!-- Amanda SVG Illustration -->
+                    <svg viewBox="0 0 200 200" class="w-full h-full object-cover">
+                        <circle cx="100" cy="100" r="90" fill="#EFFBFF"/>
+                        <path d="M50,90 Q40,40 100,30 Q160,40 150,90 Q160,130 140,110 Q100,120 60,110 Q40,130 50,90 Z" fill="#3D2314"/>
+                        <ellipse cx="100" cy="95" rx="40" ry="45" fill="#D28D68"/>
+                        <circle cx="60" cy="60" r="18" fill="#3D2314"/>
+                        <circle cx="140" cy="60" r="18" fill="#3D2314"/>
+                        <circle cx="100" cy="45" r="22" fill="#3D2314"/>
+                        <circle cx="75" cy="48" r="18" fill="#3D2314"/>
+                        <circle cx="125" cy="48" r="18" fill="#3D2314"/>
+                        <circle cx="85" cy="90" r="4" fill="#1A1A1A"/>
+                        <circle cx="115" cy="90" r="4" fill="#1A1A1A"/>
+                        <path d="M90,112 Q100,122 110,112" fill="none" stroke="#8B4513" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M55,145 L145,145 L160,200 L40,200 Z" fill="#0093FF"/>
+                        <path d="M85,145 L100,170 L115,145 Z" fill="#FFFFFF"/>
+                        <circle cx="125" cy="170" r="8" fill="#FFFFFF"/>
+                        <text x="122" y="174" font-size="10" font-weight="bold" fill="#0093FF">H</text>
+                    </svg>
+                </div>
+                <div class="absolute -bottom-2 right-2 bg-hogaru-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                    ¡Hola, soy Amanda!
+                </div>
+            </div>
+
+            <h2 class="text-2xl md:text-3xl font-bold text-hogaru-dark mb-3">
+                ¡Bienvenida al Desafío de Planchado Seguro!
+            </h2>
+            
+            <p class="text-gray-600 text-sm md:text-base mb-6 leading-relaxed max-w-lg mx-auto">
+                Acepta el reto y pongamos a prueba tu conocimiento para realizar la actividad de planchado: <b>1. Postura Correcta</b>, <b>2. Procedimiento (Antes, Durante y Después)</b> y <b>3. Controles para evitar accidentes de trabajo</b>.
+            </p>
+
+            <div>
+                <button onclick="startGame()" class="w-full sm:w-auto bg-hogaru-primary hover:bg-hogaru-dark text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-lg transition btn-bounce flex items-center justify-center gap-3 mx-auto">
+                    <span>¡EMPECEMOS EL RETO!</span>
+                    <i class="fa-solid fa-circle-play text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: GAMEPLAY SCENARIO -->
+        <div id="screen-game" class="hidden flex-col gap-4">
+            
+            <!-- Progress Bar & Stage Indicator -->
+            <div class="bg-white rounded-2xl p-3 card-shadow flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span id="stage-badge" class="bg-hogaru-soft text-hogaru-dark text-xs font-bold px-3 py-1 rounded-full border border-hogaru-light">
+                        SECCIÓN 1.
+                    </span>
+                    <span id="question-number" class="text-xs font-semibold text-gray-500">Paso 1 de 15</span>
+                </div>
+                
+                <!-- Progress Line -->
+                <div class="flex-1 bg-gray-100 h-3 rounded-full overflow-hidden border border-gray-200">
+                    <div id="progress-bar" class="bg-hogaru-primary h-full w-0 transition-all duration-500 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-3xl p-5 md:p-6 card-shadow border-t-4 border-hogaru-primary">
+                
+                <!-- Scenario Title -->
+                <div class="flex items-start justify-between gap-3 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-hogaru-bg flex items-center justify-center text-hogaru-primary text-2xl shrink-0 border border-hogaru-soft" id="scenario-icon">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-hogaru-light uppercase tracking-wider" id="scenario-category">SECCIÓN 1: POSTURA CORRECTA</p>
+                            <h3 class="text-base md:text-lg font-bold text-hogaru-dark leading-snug" id="scenario-title">
+                                Cuestión de postura
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Options Container (Toma de Decisiones) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6" id="options-container">
+                    <!-- Dynamic Options will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Feedback Modal / Card (Hidden by default) -->
+            <div id="feedback-card" class="hidden bg-white rounded-3xl p-5 md:p-6 card-shadow border-2 transition-all duration-300">
+                <div class="flex items-start gap-4">
+                    <div id="feedback-avatar" class="w-14 h-14 rounded-full bg-hogaru-bg border-2 border-hogaru-primary flex items-center justify-center text-2xl shrink-0">
+                        <i class="fa-solid fa-face-smile text-hogaru-primary"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 id="feedback-title" class="font-bold text-lg mb-1">¡Excelente Decisión!</h4>
+                        <p id="feedback-text" class="text-sm text-gray-700 leading-relaxed mb-4">
+                            Retroalimentación
+                        </p>
+                        <button onclick="nextQuestion()" class="bg-hogaru-primary hover:bg-hogaru-dark text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow transition btn-bounce flex items-center gap-2">
+                            <span>Siguiente Paso</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SCREEN 3: RESULTS & DIPLOMA -->
+        <div id="screen-result" class="hidden bg-white rounded-3xl p-6 md:p-8 card-shadow text-center relative overflow-hidden border-t-8 border-hogaru-green">
+            
+            <div class="w-20 h-20 mx-auto rounded-full bg-green-100 text-hogaru-green flex items-center justify-center text-4xl mb-3 shadow-inner">
+                <i class="fa-solid fa-award"></i>
+            </div>
+
+            <h2 class="text-2xl md:text-3xl font-bold text-hogaru-dark mb-1">
+                ¡Felicidades, Eres una profesional que aplica el Trabajo Seguro!
+            </h2>
+            <p class="text-sm text-gray-500 mb-4">Has completado con éxito las 3 secciones de la actividad de Planchado Seguro Hogarú.</p>
+
+            <!-- Final Rating Badge -->
+            <div id="final-rating-badge" class="inline-flex items-center gap-2 bg-hogaru-bg px-4 py-2 rounded-full border border-hogaru-soft mb-6">
+                <div class="flex text-yellow-400 text-xl" id="stars-container">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <span id="final-score-text" class="font-bold text-hogaru-dark text-sm">15 / 15 Aciertos</span>
+            </div>
+
+            <!-- Certificate Card -->
+            <div class="bg-gradient-to-br from-hogaru-bg to-white p-6 rounded-2xl border-2 border-hogaru-light text-left relative mb-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4 border-b pb-3 border-hogaru-soft">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-hogaru-primary text-xl"></i>
+                        <span class="font-bold text-xs text-hogaru-dark tracking-wider">HOGARÚ SST</span>
+                    </div>
+                    <span class="text-xs text-gray-400 font-semibold">EVALUACIÓN PLANCHADO</span>
+                </div>
+
+                <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Certificado del logro alcanzado</p>
+                <h3 class="text-lg font-bold text-hogaru-dark mb-2">Experta en Trabajo Seguro para Planchado</h3>
+                <p class="text-xs text-gray-600 mb-4 leading-relaxed">
+                    Acredita que para el trabajo seguro en la actividad de planchado, dominas: La Postura correcta, Procedimiento Seguro (Antes, Durante y Después), Resolución de Preguntas Frecuentes para evitar accidentes en el trabajo.
+                </p>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <div class="w-10 h-10 rounded-full bg-hogaru-soft flex items-center justify-center text-hogaru-primary font-bold text-xs">
+                        AM
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-hogaru-dark">Amanda - Guía de Seguridad Hogarú</p>
+                        <p class="text-[10px] text-gray-400">¡Tu salud y bienestar son lo más importante!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="resetGame()" class="bg-hogaru-primary hover:bg-hogaru-dark text-white font-bold text-base px-6 py-3.5 rounded-2xl shadow transition btn-bounce flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Volver a Intentar</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="w-full max-w-2xl mx-auto text-center mt-4 text-xs text-gray-400 font-medium">
+        Hogarú Limpia &bull; Sistema de Gestión de Seguridad y Salud en el Trabajo (SST)
+    </footer>
+
+    <script>
+        /* Scenarios Database - Divided into 3 Sections */
+        const scenarios = [
+            /* --- SECCIÓN 1: POSTURA CORRECTA (3 PREGUNTAS) --- */
+            {
+                id: 1,
+                stage: "SECCIÓN 1: POSTURA",
+                category: "1. Postura Correcta - Espalda y Cuello",
+                icon: "fa-child-reaching",
+                title: "¿Cuál es la postura correcta que debes mantener para la espalda y cuello durante el planchado?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Espalda erguida, brazos lo más cerca posible al tronco sin limitar el movimiento, abdomen contraído y cuello con una inclinación suave.",
+                        icon: "fa-child-reaching",
+                        correct: true,
+                        feedback: "¡Correcto! Mantener la espalda erguida, abdomen levemente contraído y evitar doblar el cuello a más de 15° protege tu columna de dolores y fatiga."
+                    },
+                    {
+                        id: 'B',
+                        text: "Encorvar la espalda hacia adelante y agachar bastante el cuello hacia la mesa para mirar de cerca.",
+                        icon: "fa-face-frown",
+                        correct: false,
+                        feedback: "¡Atención! Encorvarte o agachar el cuello más de 15° causa sobrecarga muscular severa en la cervicodorsal."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                stage: "SECCIÓN 1: POSTURA",
+                category: "2. Postura Correcta - Altura de la Mesa y Brazos",
+                icon: "fa-text-height",
+                title: "La mesa para planchar está muy baja (más abajo del nivel de la cadera). ¿Qué debes hacer?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Ajustar la altura de la mesa, si no es posible debes reportar de inmediato la condición de riesgo por el chat del servicio.",
+                        icon: "fa-comments",
+                        correct: true,
+                        feedback: "¡Así se hace! La mesa debe estar al nivel adecuado (máximo 10 cm bajo el codo) para no forzar hombros ni espalda. Siempre repórtalo."
+                    },
+                    {
+                        id: 'B',
+                        text: "Agacharte o encorvar los hombros para planchar así durante todo el turno.",
+                        icon: "fa-triangle-exclamation",
+                        correct: false,
+                        feedback: "¡Cuidado! Trabajar encorvada por una mesa baja genera lesiones musculares. Debes reportarlo de inmediato."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                stage: "SECCIÓN 1: POSTURA",
+                category: "3. Postura Correcta - Pies y Movimiento",
+                icon: "fa-socks",
+                title: "¿Cómo debes posicionar los pies y mover la mano para no recargar la espalda baja y muñeca?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Avanzar un pie respecto al otro alternando cada 5 minutos, mantener los brazos lo más cerca posible al tronco evitando el aleteo, hacer movimientos cortos con la mano evitando desviar la muñeca.",
+                        icon: "fa-shoe-prints",
+                        correct: true,
+                        feedback: "¡Perfecto! Alternar el pie de apoyo cada 5 minutos reduce tensión lumbar y mover brazo-muñeca alineados evita el túnel del carpio."
+                    },
+                    {
+                        id: 'B',
+                        text: "Quedarte totalmente rígida con los dos pies juntos y forzar la muñeca doblándola repetidamente.",
+                        icon: "fa-ban",
+                        correct: false,
+                        feedback: "¡Recuerda! Mantenerte rígida recarga la zona baja de la espalda. Alterna los pies y mantén alineada la muñeca."
+                    }
+                ]
+            },
+
+            /* --- SECCIÓN 2: EL PROCEDIMIENTO (3 PREGUNTAS: ANTES, DURANTE, DESPUÉS) --- */
+            {
+                id: 4,
+                stage: "SECCIÓN 2: PROCEDIMIENTO",
+                category: "4. Procedimiento - Antes del Planchado",
+                icon: "fa-magnifying-glass",
+                title: "ANTES de conectar la plancha e iniciar, ¿cuál es el paso a paso que debes seguir?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Inspeccionar y asegurar el área y las conexiones eléctricas. Alistar la mesa, insumos, prendas e hidratación.",
+                        icon: "fa-shield-check",
+                        correct: true,
+                        feedback: "¡Grandioso! Planear, verificar conexiones y tener todos los elementos a la mano evita desplazamientos y previene cortocircuitos."
+                    },
+                    {
+                        id: 'B',
+                        text: "Conectar la plancha de inmediato sin revisar el cable e ir a buscar cosas a la cocina mientras calienta.",
+                        icon: "fa-bolt-lightning",
+                        correct: false,
+                        feedback: "¡Importante! Nunca conectes la plancha sin revisar antes que el cable y el tomacorriente estén en perfecto estado."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                stage: "SECCIÓN 2: PROCEDIMIENTO",
+                category: "5. Procedimiento - Durante el Planchado",
+                icon: "fa-clock-rotate-left",
+                title: "DURANTE la labor de planchado, ¿qué actividades debes cumplir?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Mantener la atención en la actividad y el espacio de trabajo, tomar sorbos de agua cada 15 minutos y hacer una pausa activa de 10 minutos por cada 1 hora de planchado.",
+                        icon: "fa-person-walking-arrow-loop-left",
+                        correct: true,
+                        feedback: "¡Grandioso! Iniciar de calor Alto a Bajo optimiza el tiempo, tomar sorbos de agua te hidrata y 10 min de pausa activa por hora cuidan tu salud."
+                    },
+                    {
+                        id: 'B',
+                        text: "Planchar 3 horas seguidas sin parar y mezclando ropa de cualquier temperatura para acabar rápido.",
+                        icon: "fa-hourglass-start",
+                        correct: false,
+                        feedback: "¡Atención! Planchar continuo por horas sin pausas causa calambres, deshidratación y sobrecarga muscular severa."
+                    }
+                ]
+            },
+            {
+                id: 6,
+                stage: "SECCIÓN 2: PROCEDIMIENTO",
+                category: "6. Procedimiento - Después del Planchado",
+                icon: "fa-snowflake",
+                title: "DESPUÉS de finalizar el planchado, ¿qué debes hacer?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Guardar reposo final de 20 a 30 minutos sin mojarte, desconectar la plancha y ubicarla en un sitio seguro.",
+                        icon: "fa-plug-circle-xmark",
+                        correct: true,
+                        feedback: "¡Muy bien! El reposo final de 20 a 30 min nivela la temperatura del cuerpo antes de tocar agua o salir al frío, evitando choques térmicos."
+                    },
+                    {
+                        id: 'B',
+                        text: "Ir inmediatamente a lavar ropa con agua fría en el lavadero y dejar la plancha caliente sobre la mesa.",
+                        icon: "fa-faucet-drip",
+                        correct: false,
+                        feedback: "¡Peligro! Mojarse con agua fría o salir al viento frío justo después de planchar sin reposar perjudica tus articulaciones y salud."
+                    }
+                ]
+            },
+
+            /* --- SECCIÓN 3: MEDIDAS DE CONTROL Y PREGUNTAS FRECUENTES --- */
+            {
+                id: 7,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "7. Controles - Ventilación y Entorno",
+                icon: "fa-wind",
+                title: "El área asignada para planchar está encerrada, muy caliente o con un piso desnivelado. ¿Qué control debes aplicar?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Asegurar que el piso sea firme y plano y el área ventilada; si hay riesgo o desnivel reubicar la mesa, y si no se puede reportar por chat.",
+                        icon: "fa-door-open",
+                        correct: true,
+                        feedback: "¡Excelente control! Una buena ventilación previene mareos o dolores de cabeza y un piso nivelado evita que la mesa se caiga."
+                    },
+                    {
+                        id: 'B',
+                        text: "Quedarte en el sitio sin aire ni ventilación y planchar sobre la mesa tambaleante.",
+                        icon: "fa-triangle-exclamation",
+                        correct: false,
+                        feedback: "¡Cuidado! Trabajar sin ventilación o sobre piso inestable causa desvanecimientos y caídas de la plancha caliente."
+                    }
+                ]
+            },
+            {
+                id: 8,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "8. Controles - Niños y Mascotas",
+                icon: "fa-shield-cat",
+                title: "Hay niños pequeños o mascotas jugando cerca de donde vas a colocar la mesa de planchar. ¿Qué medida aplicas?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Cerrar la puerta del área o solicitar amablemente al cliente aislar al niño o mascota durante el servicio.",
+                        icon: "fa-door-closed",
+                        correct: true,
+                        feedback: "¡Muy bien! Aislar a niños y mascotas evita tropiezos, jalones de cable o quemaduras graves."
+                    },
+                    {
+                        id: 'B',
+                        text: "Dejarlos correr cerca de la mesa confiando en que no van a tocar el cable ni la plancha.",
+                        icon: "fa-paw",
+                        correct: false,
+                        feedback: "¡Riesgo alto! Un tropiezo del niño o la mascota con el cable puede voltear la plancha sobre ellos o sobre ti."
+                    }
+                ]
+            },
+            {
+                id: 9,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "9. Controles - Cuidado Corporal e Higiene",
+                icon: "fa-hand-holding-droplet",
+                title: "Durante la labor de planchado sientes necesidad de limpiarte las manos. ¿Qué control de bioseguridad usas?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Utilizar gel antibacterial o toallas de papel. ¡Nunca mojarte las manos con agua mientras planchas!",
+                        icon: "fa-pump-soap",
+                        correct: true,
+                        feedback: "¡Excelente! Utilizar gel o papel seco te mantiene limpia sin exponer tus articulaciones al choque térmico del agua."
+                    },
+                    {
+                        id: 'B',
+                        text: "Lavarte las manos con agua fría en la llave del baño o lavadero y continuar planchando.",
+                        icon: "fa-hands-bubbles",
+                        correct: false,
+                        feedback: "¡Peligro para la salud! Lavarte las manos con agua helada estando acalorada por el planchado causa choque térmico articular."
+                    }
+                ]
+            },
+            {
+                id: 10,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "10. Preguntas Frecuentes - Servicios Mañana y Tarde",
+                icon: "fa-calendar-days",
+                title: "¿Si planchas en la mañana, puedes realizar un servicio normal de limpieza en la tarde?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Sí, siempre y cuando hayas realizado las pausas activas (10 min por hora) y tu reposo final mínimo de 20 minutos.",
+                        icon: "fa-circle-check",
+                        correct: true,
+                        feedback: "¡Correcto! Cumpliendo tus pausas activas y el reposo final de 20 minutos tu cuerpo regula su temperatura y estás lista para la tarde."
+                    },
+                    {
+                        id: 'B',
+                        text: "No, nunca se puede tomar otro servicio el mismo día después de planchar.",
+                        icon: "fa-circle-xmark",
+                        correct: false,
+                        feedback: "¡Recuerda! Sí es posible realizar el servicio en la tarde, siempre que garantices tus pausas activas y reposo final en la mañana."
+                    }
+                ]
+            },
+            {
+                id: 11,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "11. Preguntas Frecuentes - Ausencia de Mesa de Planchar",
+                icon: "fa-border-all",
+                title: "¿Si el cliente no cuenta con mesa para planchar, qué debes hacer?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "No realizar la actividad y reportarlo inmediatamente por el chat del servicio para recibir instrucciones de SST.",
+                        icon: "fa-headset",
+                        correct: true,
+                        feedback: "¡Excelente decisión! Sin mesa para planchar no debes realizar la labor; se debe reportar por chat para que SST brinde alternativas seguras."
+                    },
+                    {
+                        id: 'B',
+                        text: "Planchar sobre la cama o en el piso inclinada para no retrasar el trabajo.",
+                        icon: "fa-triangle-exclamation",
+                        correct: false,
+                        feedback: "¡Cuidado! Planchar en el piso o sobre camas daña gravemente tu columna y genera un riesgo de incendio o quemaduras."
+                    }
+                ]
+            },
+            {
+                id: 12,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "12. Preguntas Frecuentes - Restricción de Descansos",
+                icon: "fa-user-slash",
+                title: "Si el cliente solicita no hacer pausas activas, no tomar el reposo final para terminar rápido, ¿qué debes hacer?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Reportar de inmediato por el chat del servicio para que SST valide la condición de riesgo y dialogue con el cliente.",
+                        icon: "fa-comments-dollar",
+                        correct: true,
+                        feedback: "¡Muy bien! Tus descansos y reposos son indispensables para tu salud. SST intervendrá asertivamente para garantizar tu bienestar."
+                    },
+                    {
+                        id: 'B',
+                        text: "Aceptar la solicitud del cliente y trabajar seguido sin descansos para complacerlo.",
+                        icon: "fa-user-xmark",
+                        correct: false,
+                        feedback: "¡Recuerda! La salud es lo primero. Nunca debes omitir las pausas ni el reposo final; repórtalo siempre a SST."
+                    }
+                ]
+            },
+            {
+                id: 13,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "13. Preguntas Frecuentes - Tareas Simultáneas",
+                icon: "fa-list-check",
+                title: "Si el cliente pide realizar otra labor mientras planchas, ¿puedes hacerla?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Sí, siempre y cuando no implique mojarte ni exponerte a corrientes de frío (ej: doblar ropa seca u organizar).",
+                        icon: "fa-shirt",
+                        correct: true,
+                        feedback: "¡Correcto! Puedes combinar con tareas secas como doblar ropa. Jamás debes hacer labores que impliquen agua o frío."
+                    },
+                    {
+                        id: 'B',
+                        text: "Sí, puedes pausar el planchado e ir a lavar loza o trapear con agua fría sin ningún problema.",
+                        icon: "fa-faucet",
+                        correct: false,
+                        feedback: "¡Riesgo grave! Interrumir el planchado para tocar agua fría provoca choque térmico directo en tus manos y articulaciones."
+                    }
+                ]
+            },
+            {
+                id: 14,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "14. Preguntas Frecuentes - Elementos de Protección",
+                icon: "fa-head-side-mask",
+                title: "¿Debes usar guantes y tapabocas durante la labor de planchado?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Guantes NO se deben usar. Si no presentas síntomas gripales y estas sola en el área de planchado, no es obligatorio el uso de tapabocas.",
+                        icon: "fa-face-smile",
+                        correct: true,
+                        feedback: "¡Exacto! Los guantes restan maniobrabilidad con el calor y el tapabocas se puede omitir si estás sola en un área ventilada."
+                    },
+                    {
+                        id: 'B',
+                        text: "Obligatoriamente debes usar guantes de caucho gruesos y tapabocas hermético en todo momento.",
+                        icon: "fa-hand-dots",
+                        correct: false,
+                        feedback: "¡Atención! Usar guantes de caucho al planchar acumula calor extremo y sudor, resultando contraproducente."
+                    }
+                ]
+            },
+            {
+                id: 15,
+                stage: "SECCIÓN 3: CONTROLES PARA EVITAR ACCIDENTES DE TRABAJO",
+                category: "15. Preguntas Frecuentes - Primeros Auxilios por Quemadura",
+                icon: "fa-kit-medical",
+                title: "En caso de sufrir una quemadura accidental con la plancha, ¿qué debes hacer?",
+                options: [
+                    {
+                        id: 'A',
+                        text: "Reportar de inmediato por el chat del servicio. Enfriar con agua fresca durante 10-15 minutos o usar suero fisiológico si el cliente tiene disponible. NO aplicar cremas o aceites, no retirar ropa que se haya quedado pegada.",
+                        icon: "fa-temperature-arrow-down",
+                        correct: true,
+                        feedback: "¡Excelente protocolo! Enfriar con agua fresca por 10 a 15 min alivia la piel. Nunca uses cremas o remedios caseros ni despegues prendas."
+                    },
+                    {
+                        id: 'B',
+                        text: "Aplicar crema, pomada o aceite inmediatamente sobre la herida y arrancar la ropa adherida.",
+                        icon: "fa-prescription-bottle-medical",
+                        correct: false,
+                        feedback: "¡Peligro! Aplicar aceites o cremas atrapa el calor y empeora la quemadura. Retirar ropa adherida desprende la piel afectada."
+                    }
+                ]
+            }
+        ];
+
+        /* Game State Variables */
+        let currentScenarioIndex = 0;
+        let score = 0;
+
+        /* Start Game */
+        function startGame() {
+            currentScenarioIndex = 0;
+            score = 0;
+            
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.getElementById('screen-game').classList.add('flex');
+
+            loadScenario();
+        }
+
+        /* Load Question */
+        function loadScenario() {
+            const scenario = scenarios[currentScenarioIndex];
+
+            // Hide feedback card
+            document.getElementById('feedback-card').classList.add('hidden');
+
+            // Update Header & Progress
+            document.getElementById('question-number').innerText = `Paso ${currentScenarioIndex + 1} de ${scenarios.length}`;
+            document.getElementById('stage-badge').innerText = scenario.stage;
+            document.getElementById('scenario-category').innerText = scenario.category;
+            document.getElementById('scenario-title').innerText = scenario.title;
+            document.getElementById('scenario-icon').innerHTML = `<i class="fa-solid ${scenario.icon}"></i>`;
+
+            const progressPercentage = ((currentScenarioIndex + 1) / scenarios.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+
+            // Render Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            scenario.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = `p-5 rounded-2xl border-2 border-hogaru-soft bg-hogaru-bg/50 hover:bg-hogaru-soft/40 hover:border-hogaru-primary text-left transition btn-bounce flex flex-col justify-between gap-3 group relative overflow-hidden`;
+                btn.onclick = () => selectOption(opt);
+
+                btn.innerHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <span class="w-8 h-8 rounded-full bg-white border border-hogaru-light text-hogaru-primary font-bold text-sm flex items-center justify-center shadow-sm group-hover:bg-hogaru-primary group-hover:text-white transition">
+                            ${opt.id}
+                        </span>
+                        <i class="fa-solid ${opt.icon} text-2xl text-hogaru-primary/60 group-hover:text-hogaru-primary transition"></i>
+                    </div>
+                    <p class="text-sm font-semibold text-hogaru-dark leading-snug">${opt.text}</p>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        /* Select Option Handler */
+        function selectOption(option) {
+            const isCorrect = option.correct;
+
+            if (isCorrect) {
+                score++;
+                playSuccessSound();
+            } else {
+                playErrorSound();
+            }
+
+            document.getElementById('score-display').innerText = `${score} / ${scenarios.length}`;
+
+            // Show Feedback
+            const feedbackCard = document.getElementById('feedback-card');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackAvatar = document.getElementById('feedback-avatar');
+
+            feedbackCard.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedbackCard.className = "bg-green-50 rounded-3xl p-5 md:p-6 card-shadow border-2 border-hogaru-green transition-all duration-300";
+                feedbackAvatar.className = "w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center text-xl shrink-0 shadow";
+                feedbackAvatar.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                feedbackTitle.innerText = "¡Excelente Decisión!";
+                feedbackTitle.className = "font-bold text-lg mb-1 text-hogaru-green";
+            } else {
+                feedbackCard.className = "bg-amber-50 rounded-3xl p-5 md:p-6 card-shadow border-2 border-hogaru-orange transition-all duration-300";
+                feedbackAvatar.className = "w-12 h-12 rounded-full bg-hogaru-orange text-white flex items-center justify-center text-xl shrink-0 shadow";
+                feedbackAvatar.innerHTML = `<i class="fa-solid fa-lightbulb"></i>`;
+                feedbackTitle.innerText = "¡Aprendamos juntas!";
+                feedbackTitle.className = "font-bold text-lg mb-1 text-hogaru-orange";
+            }
+
+            feedbackText.innerText = option.feedback;
+        }
+
+        /* Next Question or Finish */
+        function nextQuestion() {
+            currentScenarioIndex++;
+
+            if (currentScenarioIndex < scenarios.length) {
+                loadScenario();
+            } else {
+                showResults();
+            }
+        }
+
+        /* Show Results Screen */
+        function showResults() {
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('flex');
+            document.getElementById('screen-result').classList.remove('hidden');
+
+            document.getElementById('final-score-text').innerText = `${score} / ${scenarios.length} Aciertos`;
+
+            // Reproducir sonido de victoria final
+            playVictorySound();
+
+            // Confetti celebration
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#0093FF', '#3CBDFF', '#10B981']
+                });
+            }
+        }
+
+        /* Reset Game */
+        function resetGame() {
+            startGame();
+        }
+
+        /* --- EFECTOS DE SONIDO LIMPIOS (WEB AUDIO API) --- */
+        
+        /* Tono armónico para respuesta correcta */
+        function playSuccessSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+
+                const notes = [523.25, 659.25, 783.99]; // Acorde C5, E5, G5
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+                    gain.gain.setValueAtTime(0, now + idx * 0.08);
+                    gain.gain.linearRampToValueAtTime(0.15, now + idx * 0.08 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.3);
+                });
+            } catch (e) {
+                console.error("Audio error:", e);
+            }
+        }
+
+        /* Tono suave para respuesta incorrecta */
+        function playErrorSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.linearRampToValueAtTime(160, now + 0.3);
+
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } catch (e) {
+                console.error("Audio error:", e);
+            }
+        }
+
+        /* Arpegio alegre para el logro final */
+        function playVictorySound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+
+                    gain.gain.setValueAtTime(0, now + idx * 0.12);
+                    gain.gain.linearRampToValueAtTime(0.2, now + idx * 0.12 + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.4);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(now + idx * 0.12);
+                    osc.stop(now + idx * 0.12 + 0.4);
+                });
+            } catch (e) {
+                console.error("Audio error:", e);
+            }
+        }
+    </script>
+</body>
+</html>
