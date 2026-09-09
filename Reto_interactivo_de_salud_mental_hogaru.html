@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reto: Mejorar tu salud mental está a tu alcance | Hogarú 2026</title>
+
+  <!-- Google Fonts: Open Sans (Tipografía oficial de marca Hogarú) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF para emisión de Certificado en PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Canvas Confetti para animación de celebración -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Open Sans"', 'sans-serif'],
+          },
+          colors: {
+            hogaru: {
+              primary: '#0084FF',      /* Azul Principal Hogarú */
+              secondary: '#004187',    /* Azul Secundario Oscuro */
+              light: '#EFF6FF',        /* Fondo azul suave */
+              accent: '#38BDF8',       /* Celeste radiante */
+              surface: '#F8FAFC',
+              dark: '#0F172A'
+            }
+          },
+          animation: {
+            'float': 'float 4s ease-in-out infinite',
+            'pulse-subtle': 'pulseSubtle 2.5s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.85' },
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Efecto de destello estelar Hogarú */
+    .sparkle-shape {
+      pointer-events: none;
+      opacity: 0.28;
+      transition: all 0.5s ease;
+    }
+
+    /* Desenfoques orgánicos de fondo */
+    .blur-orb-1 {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,132,255,0.18) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(40px);
+      z-index: 0;
+    }
+
+    .blur-orb-2 {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,65,135,0.14) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(50px);
+      z-index: 0;
+    }
+
+    /* Transición suave para botones de respuesta */
+    .option-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-card:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -6px rgba(0, 132, 255, 0.25);
+    }
+    .option-card:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 via-blue-50/40 to-slate-100 min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden antialiased">
+  
+  <!-- Orbes decorativos orgánicos basados en el manual de marca Hogarú -->
+  <div class="blur-orb-1 -top-20 -left-20 pointer-events-none"></div>
+  <div class="blur-orb-2 top-1/2 -right-20 pointer-events-none"></div>
+  <div class="blur-orb-1 bottom-10 left-1/3 pointer-events-none"></div>
+
+  <header class="relative z-10 w-full bg-white/90 backdrop-blur-md border-b border-blue-100 shadow-sm px-4 py-3 sm:py-4 transition-all">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <!-- Logo Hogarú -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-hogaru-secondary to-hogaru-primary flex items-center justify-center shadow-md shadow-blue-500/20 text-white font-black text-xl tracking-tight">
+          H
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-xl tracking-tight text-hogaru-secondary">Hogarú</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-hogaru-secondary px-2 py-0.5 rounded-full">Seguridad y Salud</span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-500 font-medium">Programa de Estilos de Vida Saludable | 2026</p>
+        </div>
+      </div>
+
+      <!-- Badge de Racha o Estado -->
+      <div id="streak-badge" class="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-xs font-semibold shadow-xs">
+        <span>🔥 Racha:</span>
+        <span id="streak-count" class="font-bold">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 w-full max-w-4xl mx-auto">
+    <div class="w-full bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl shadow-blue-900/5 border border-blue-100/80 p-5 sm:p-8 md:p-10 transition-all duration-300">
+      
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 1: BIENVENIDA Y REGISTRO DEL COLABORADOR -->
+      <!-- ========================================================================= -->
+      <div id="screen-welcome" class="text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-2xl text-hogaru-primary mb-4 shadow-inner">
+          <svg class="w-8 h-8 sm:w-10 sm:h-10 text-hogaru-primary animate-pulse-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+
+        <div class="inline-block bg-blue-50 text-hogaru-secondary text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-3">
+          ✨ La mejor versión 2026
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-hogaru-secondary leading-tight mb-3">
+          Mejorar tu salud mental <br class="hidden sm:block">
+          <span class="text-hogaru-primary">está a tu alcance</span>
+        </h1>
+
+        <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto mb-6 leading-relaxed">
+          ¡Hola! En Hogarú cuidamos de ti. Te invitamos a poner a prueba tus conocimientos sobre hábitos diarios para reducir el estrés, dormir mejor y cuidar de tu bienestar emocional.
+        </p>
+
+        <form id="form-participant" onsubmit="startGame(event)" class="max-w-md mx-auto space-y-4 text-left bg-slate-50/80 p-5 sm:p-6 rounded-2xl border border-slate-200/80 mb-4">
+          <div>
+            <label for="input-name" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+              Tu Nombre Completo <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-name" 
+              required 
+              placeholder="Ej. María Camila Gómez" 
+              class="w-full px-4 py-3 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-hogaru-primary focus:border-hogaru-primary outline-none transition"
+            >
+          </div>
+
+          <div>
+            <label for="input-role" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+              Cargo <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-role" 
+              required 
+              placeholder="Ej. Profesional de Limpieza / Operaciones / SST" 
+              class="w-full px-4 py-3 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-hogaru-primary focus:border-hogaru-primary outline-none transition"
+            >
+          </div>
+
+          <div class="pt-2">
+            <button 
+              type="submit" 
+              class="w-full py-3.5 px-6 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition duration-200 flex items-center justify-center gap-2 group text-base"
+            >
+              <span>¡Comenzar el Reto!</span>
+              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <p class="text-xs text-slate-400">
+          💡 Puedes participar desde cualquier teléfono o computador en menos de 4 minutos.
+        </p>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 2: JUEGO / PREGUNTAS INTERACTIVAS -->
+      <!-- ========================================================================= -->
+      <div id="screen-quiz" class="hidden">
+        <div class="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-500 mb-2">
+          <span>Pregunta <span id="current-q-number" class="text-hogaru-primary font-bold">1</span> de 10</span>
+          <span class="text-hogaru-secondary font-bold" id="score-display">0 Puntos</span>
+        </div>
+
+        <!-- Barra de Progreso -->
+        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-6 border border-slate-200">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-hogaru-primary to-hogaru-secondary transition-all duration-300 w-[10%]"></div>
+        </div>
+
+        <!-- Categoría del Hábito -->
+        <div class="flex items-center gap-2 mb-2">
+          <span id="question-category" class="inline-block text-[11px] font-bold uppercase tracking-wider text-hogaru-secondary bg-blue-50 px-2.5 py-1 rounded-md">
+            Hábito Clave
+          </span>
+        </div>
+
+        <!-- Enunciado de la Pregunta -->
+        <h2 id="question-title" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-6 leading-snug">
+          Cargando pregunta...
+        </h2>
+
+        <!-- Opciones de Respuesta -->
+        <div id="options-container" class="grid grid-cols-1 gap-3 mb-6">
+          <!-- Se inyectan dinámicamente -->
+        </div>
+
+        <div id="feedback-panel" class="hidden rounded-2xl p-4 sm:p-5 border transition-all duration-300 mb-6">
+          <div class="flex items-start gap-3">
+            <div id="feedback-icon" class="text-2xl mt-0.5"></div>
+            <div class="flex-1">
+              <h3 id="feedback-title" class="font-bold text-sm sm:text-base mb-1"></h3>
+              <p id="feedback-desc" class="text-xs sm:text-sm leading-relaxed"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón Siguiente Pregunta -->
+        <div class="text-right">
+          <button 
+            id="btn-next" 
+            onclick="nextQuestion()" 
+            class="hidden py-3 px-6 bg-hogaru-secondary hover:bg-hogaru-primary text-white font-bold rounded-xl shadow-md transition duration-200 text-sm sm:text-base"
+          >
+            Continuar ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 3: RESULTADOS, CERTIFICADO Y REPORTE -->
+      <!-- ========================================================================= -->
+      <div id="screen-results" class="hidden text-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 rounded-full text-hogaru-primary mb-3 shadow-inner">
+          <span class="text-4xl" id="results-emoji">🏆</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-hogaru-secondary mb-1">
+          ¡Reto Completado con Éxito!
+        </h2>
+        <p class="text-sm text-slate-500 mb-6 font-medium">
+          Programa de Estilos de Vida Saludable Hogarú 2026
+        </p>
+
+        <!-- Tarjeta de Puntaje -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50/40 p-6 rounded-3xl border border-blue-100 max-w-md mx-auto mb-6">
+          <div class="text-xs uppercase tracking-wider font-bold text-slate-500 mb-1">Resultado de</div>
+          <div class="text-lg font-bold text-hogaru-secondary mb-3" id="results-participant-name">Nombre</div>
+
+          <div class="flex justify-center items-baseline gap-2 mb-2">
+            <span class="text-4xl sm:text-5xl font-extrabold text-hogaru-primary" id="results-score">0</span>
+            <span class="text-sm text-slate-500 font-semibold">/ 1000 pts (<span id="results-pct" class="text-hogaru-secondary font-bold">0%</span>)</span>
+          </div>
+
+          <p class="text-xs sm:text-sm font-semibold text-slate-600 mb-2">
+            Aciertos: <span class="text-hogaru-secondary font-bold" id="results-correct-count">0</span> de 10 preguntas
+          </p>
+
+          <div class="inline-block px-3 py-1 bg-white text-hogaru-secondary font-bold text-xs rounded-full border border-blue-200 shadow-xs" id="results-badge">
+            Nivel: Explorador de Bienestar
+          </div>
+        </div>
+
+        <!-- Tarjeta de Registro de Asistencia mediante Google Forms -->
+        <div class="bg-emerald-50/90 p-5 rounded-2xl border-2 border-emerald-300/80 max-w-md mx-auto mb-6 text-center shadow-sm">
+          <div class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-emerald-600 text-white mb-2 shadow-sm">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-emerald-950 mb-1">
+            Paso Obligatorio: Registrar tu Asistencia
+          </h3>
+          <p class="text-xs text-emerald-800 mb-3 leading-relaxed">
+            Para validar tu participación oficial en el Programa de Estilos de Vida Saludable 2026, haz clic abajo y diligencia el formulario:
+          </p>
+          <a 
+            id="link-google-forms" 
+            href="https://forms.gle/mShsNdVzHVtjpumQ6" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm sm:text-base group"
+          >
+            <span>📋 Diligenciar Formulario de Asistencia</span>
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mensaje de Cierre Inspirador -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm max-w-md mx-auto text-left mb-6">
+          <div class="flex items-center gap-2 mb-2 text-hogaru-secondary font-bold text-sm">
+            <svg class="w-5 h-5 text-hogaru-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/>
+            </svg>
+            <span>Clave para tu día a día:</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed" id="final-advice">
+            "Empieza pequeño: elige 1 o 2 hábitos que resuenen contigo hoy. Y recuerda tener siempre listo tu Plan B de 5 a 10 minutos para mantener el ritmo sin culpas."
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-3 justify-center max-w-md mx-auto">
+          <!-- Botón Descarga de Certificado PDF -->
+          <button 
+            id="btn-download-cert" 
+            onclick="generateCertificatePDF()" 
+            class="w-full py-3.5 px-4 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2 text-sm sm:text-base"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Descargar mi Certificado (PDF)</span>
+          </button>
+
+          <!-- Botón Reiniciar Juego -->
+          <button 
+            onclick="restartGame()" 
+            class="w-full py-3 px-5 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold rounded-xl transition text-sm flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Volver a jugar</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="relative z-10 w-full py-4 text-center text-xs text-slate-400 border-t border-slate-200/60 bg-white/50 backdrop-blur-xs">
+    <p>Hogarú © 2026 • Valores: Empatía | Comunicación asertiva | Experimentación | Autogestión</p>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: LÓGICA DEL JUEGO, CERTIFICADO Y ENLACE DE ASISTENCIA -->
+  <!-- ========================================================================= -->
+  <script>
+    // =========================================================================
+    // 👇 LINK OFICIAL DEL FORMULARIO DE GOOGLE FORMS 👇
+    // =========================================================================
+    const GOOGLE_FORMS_URL = "https://forms.gle/mShsNdVzHVtjpumQ6";
+    // =========================================================================
+
+    const questions = [
+      {
+        category: "Sueño Reparador",
+        title: "¿Cuál es la recomendación de sueño respaldada por la ciencia para cuidar tu salud mental y cuándo conviene soltar las pantallas?",
+        options: [
+          "Dormir de 4 a 5 horas y ver redes sociales hasta sentir sueño.",
+          "Dormir mínimo 7 horas diarias con horario regular y apagar pantallas 60 minutos antes de dormir.",
+          "Dormir 12 horas solo los fines de semana con la televisión encendida.",
+          "Cualquier cantidad de horas, siempre que tomes bebidas energéticas en la mañana."
+        ],
+        correctIndex: 1,
+        explanation: "Un descanso de 7 a 9 horas a la misma hora y desconectarte de pantallas 60 min antes evita el retraso del sueño y permite una verdadera regeneración mental."
+      },
+      {
+        category: "Movimiento Diario",
+        title: "Según la recomendación ¿cuánto movimiento regular ayuda a reducir de forma notable el estrés y la ansiedad?",
+        options: [
+          "Únicamente entrenamientos extremos de 3 horas diarias en el gimnasio.",
+          "Caminar o hacer actividad moderada durante 20 a 30 minutos al menos 3 veces por semana.",
+          "Correr maratones sin ningún descanso intermedio.",
+          "Permanecer sentado todo el día sin pausas activas."
+        ],
+        correctIndex: 1,
+        explanation: "Caminar a paso ligero de 20 a 30 minutos libera endorfinas, alivia la tensión muscular y despeja tu mente sin necesidad de sobreexigirte."
+      },
+      {
+        category: "Gratitud y Journaling",
+        title: "¿En qué consiste el hábito de journaling y gratitud para aumentar las emociones positivas en 4 a 6 semanas?",
+        options: [
+          "Anotar únicamente las quejas y pendientes laborales del día.",
+          "Escribir 3 cosas que salieron bien o por las que sientes gratitud, de 3 a 5 veces por semana.",
+          "Escribir un libro completo cada fin de semana de forma obligatoria.",
+          "Memorizar listas de compras antes de acostarte."
+        ],
+        correctIndex: 1,
+        explanation: "Agradecer o registrar 3 momentos positivos entrena tu cerebro para notar lo valioso, reduciendo el sesgo negativo natural ante el estrés."
+      },
+      {
+        category: "Pausas Conscientes",
+        title: "Ante un momento de presión o 'productividad ansiosa', ¿cuál es una técnica rápida de regulación recomendada?",
+        options: [
+          "Respiración consciente o técnica en caja (inhalar 4, sostener 4 y exhalar 6).",
+          "Acelerar el ritmo y saltarse los descansos para terminar más rápido.",
+          "Tomar 4 tazas de café seguidas sin tomar agua.",
+          "Ignorar el cansancio hasta que el cuerpo avise con dolor."
+        ],
+        correctIndex: 0,
+        explanation: "La respiración pausada (4-4-6) estimula el sistema nervioso parasimpático, bajando el ritmo cardíaco y devolviéndote la calma en solo 2 minutos."
+      },
+      {
+        category: "Límites Digitales",
+        title: "¿Qué práctica digital protege tu mente de la sobrecarga y el agotamiento en las mañanas?",
+        options: [
+          "Revisar noticias alarmantes y correos apenas abres los ojos en la cama.",
+          "Tener el teléfono encendido con notificaciones en sonido durante toda la noche.",
+          "Empezar la mañana sin prisas y evitar revisar el teléfono inmediatamente al despertar.",
+          "Contestar mensajes instantáneos en la madrugada."
+        ],
+        correctIndex: 2,
+        explanation: "Evitar el teléfono al despertar te permite adueñarte de tu primera hora del día, evitando iniciar la jornada en estado de alerta reactiva."
+      },
+      {
+        category: "Conexión Social",
+        title: "¿Por qué la conexión social de calidad es un factor protector frente al estrés?",
+        options: [
+          "Porque tener miles de seguidores en redes sociales previene el estrés.",
+          "Conversar con personas de confianza y recibir apoyo emocional amortigua los momentos difíciles.",
+          "Porque aislarse por completo es la única forma de descansar.",
+          "No tiene ningún impacto en el estado emocional."
+        ],
+        correctIndex: 1,
+        explanation: "Compartir cómo te sientes con compañeros o seres queridos de confianza alivia cargas emocionales y fortalece tu resiliencia."
+      },
+      {
+        category: "Priorización Asertiva",
+        title: "Para evitar la sobrecarga diaria de tareas, ¿qué estrategia cotidiana promueve el bienestar?",
+        options: [
+          "Aceptar todas las peticiones sin importar el tiempo disponible.",
+          "Definir 1 prioridad alcanzable en el día y aprender a decir 'no' de forma asertiva.",
+          "Hacer 5 tareas complejas de manera simultánea sin orden.",
+          "Postergar todo hasta que sea una urgencia de última hora."
+        ],
+        correctIndex: 1,
+        explanation: "En Hogarú valoramos la comunicación asertiva: acordar límites claros y definir una meta realista al día previene la fatiga extrema."
+      },
+      {
+        category: "Nutrición e Hidratación",
+        title: "¿Qué relación tienen la alimentación y la hidratación regular con tu estado de ánimo?",
+        options: [
+          "Tomar únicamente bebidas azucaradas mejora la estabilidad mental.",
+          "Saltarse comidas es la mejor manera de mantener la concentración mental.",
+          "Mantener comidas regulares, hidratarte y sumar frutas o verduras nutre el cerebro y estabiliza la energía.",
+          "El estómago y el cerebro no tienen ninguna relación biológica."
+        ],
+        correctIndex: 2,
+        explanation: "La hidratación y comidas equilibradas evitan los picos de glucosa y fatiga, garantizando claridad mental durante toda la jornada."
+      },
+      {
+        category: "Contacto con la Naturaleza",
+        title: "¿Qué beneficio tiene pasar tiempo al aire libre o en actividades de ocio relajante?",
+        options: [
+          "Disminuye los niveles de cortisol (estrés) y restaura la atención mental.",
+          "Aumenta la ansiedad por no estar trabajando.",
+          "Solo funciona si viajas a otro país.",
+          "Es una pérdida de tiempo sin respaldo científico."
+        ],
+        correctIndex: 0,
+        explanation: "Estar cerca de árboles, luz solar suave o parques disminuye la frecuencia cardíaca y renueva tu capacidad de concentración."
+      },
+      {
+        category: "Estrategia de Éxito: Plan B",
+        title: "Si un día tu rutina se rompe por el trabajo o la familia, ¿cómo aconseja el programa mantener el hábito?",
+        options: [
+          "Rendirse y abandonar el hábito para siempre por sentirse culpable.",
+          "Castigarse con el doble de exigencia al día siguiente.",
+          "Tener listo un 'Plan B': una versión corta de 5 a 10 minutos (micro-hábito) para no perder el ritmo.",
+          "Fingir que no pasa nada y descuidar tu salud."
+        ],
+        correctIndex: 2,
+        explanation: "¡Empieza pequeño y sé flexible! Un Plan B de 5 minutos mantiene viva tu identidad saludable sin añadir presiones innecesarias."
+      }
+    ];
+
+    let participant = { name: '', role: '' };
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let streak = 0;
+    let correctAnswersCount = 0;
+
+    // Generador de efectos de sonido procedurales con Web Audio API
+    let audioCtx = null;
+    function playTone(type) {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+        if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15); // G5
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'error') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(280, now);
+          osc.frequency.linearRampToValueAtTime(200, now + 0.25);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'fanfare') {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const noteOsc = audioCtx.createOscillator();
+            const noteGain = audioCtx.createGain();
+            noteOsc.connect(noteGain);
+            noteGain.connect(audioCtx.destination);
+            noteOsc.frequency.value = freq;
+            const startT = now + (idx * 0.1);
+            noteGain.gain.setValueAtTime(0.2, startT);
+            noteGain.gain.exponentialRampToValueAtTime(0.001, startT + 0.4);
+            noteOsc.start(startT);
+            noteOsc.stop(startT + 0.4);
+          });
+        }
+      } catch (e) {
+        // Silencioso si el navegador bloquea audio
+      }
+    }
+
+    function startGame(e) {
+      e.preventDefault();
+      const nameVal = document.getElementById('input-name').value.trim();
+      const roleVal = document.getElementById('input-role').value.trim();
+
+      if (!nameVal || !roleVal) return;
+
+      participant.name = nameVal;
+      participant.role = roleVal;
+
+      document.getElementById('screen-welcome').classList.add('hidden');
+      document.getElementById('screen-quiz').classList.remove('hidden');
+      document.getElementById('streak-badge').classList.remove('hidden');
+
+      currentQuestionIndex = 0;
+      score = 0;
+      streak = 0;
+      correctAnswersCount = 0;
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentQuestionIndex];
+
+      // Actualizar contador y progreso
+      document.getElementById('current-q-number').textContent = currentQuestionIndex + 1;
+      const progressPct = ((currentQuestionIndex + 1) / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPct}%`;
+      document.getElementById('question-category').textContent = q.category;
+      document.getElementById('question-title').textContent = q.title;
+
+      // Ocultar feedback y botón siguiente
+      const feedbackPanel = document.getElementById('feedback-panel');
+      feedbackPanel.classList.add('hidden');
+      feedbackPanel.className = 'hidden rounded-2xl p-4 sm:p-5 border transition-all duration-300 mb-6';
+      document.getElementById('btn-next').classList.add('hidden');
+
+      // Generar opciones
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+
+      const optionLetters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-card w-full text-left p-4 sm:p-4.5 rounded-2xl border-2 border-slate-200 bg-white hover:border-hogaru-primary/70 flex items-start gap-3.5 focus:outline-none';
+        btn.onclick = () => selectOption(idx);
+
+        btn.innerHTML = `
+          <span class="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 font-bold text-xs sm:text-sm text-slate-600 flex items-center justify-center border border-slate-200 opt-letter">
+            ${optionLetters[idx]}
+          </span>
+          <span class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed pt-0.5">
+            ${optText}
+          </span>
+        `;
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIdx) {
+      const q = questions[currentQuestionIndex];
+      const buttons = document.querySelectorAll('#options-container button');
+
+      // Deshabilitar todos los botones
+      buttons.forEach(b => b.disabled = true);
+
+      const isCorrect = selectedIdx === q.correctIndex;
+      const feedbackPanel = document.getElementById('feedback-panel');
+      const feedbackTitle = document.getElementById('feedback-title');
+      const feedbackDesc = document.getElementById('feedback-desc');
+      const feedbackIcon = document.getElementById('feedback-icon');
+
+      if (isCorrect) {
+        streak++;
+        correctAnswersCount++;
+        const pointsWon = 100; // 100 puntos por cada acierto exacto (10 preguntas = 1000 puntos maximo)
+        score += pointsWon;
+        playTone('correct');
+
+        // Estilo de opción correcta
+        buttons[selectedIdx].classList.remove('border-slate-200', 'bg-white');
+        buttons[selectedIdx].classList.add('border-emerald-500', 'bg-emerald-50/60');
+        const letterBadge = buttons[selectedIdx].querySelector('.opt-letter');
+        letterBadge.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+
+        // Panel de retroalimentación
+        feedbackPanel.classList.remove('hidden');
+        feedbackPanel.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+        feedbackIcon.textContent = '🎉';
+        feedbackTitle.textContent = `¡Excelente elección! (+${pointsWon} pts)`;
+        feedbackDesc.textContent = q.explanation;
+      } else {
+        streak = 0;
+        playTone('error');
+
+        // Opción elegida errónea
+        buttons[selectedIdx].classList.remove('border-slate-200', 'bg-white');
+        buttons[selectedIdx].classList.add('border-rose-400', 'bg-rose-50/70');
+        const errBadge = buttons[selectedIdx].querySelector('.opt-letter');
+        errBadge.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+
+        // Mostrar cuál era la correcta
+        buttons[q.correctIndex].classList.remove('border-slate-200', 'bg-white');
+        buttons[q.correctIndex].classList.add('border-emerald-500', 'bg-emerald-50/40');
+        const correctBadge = buttons[q.correctIndex].querySelector('.opt-letter');
+        correctBadge.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+
+        // Panel de retroalimentación constructiva (Tono empático Hogarú)
+        feedbackPanel.classList.remove('hidden');
+        feedbackPanel.classList.add('bg-blue-50', 'border-blue-200', 'text-slate-800');
+        feedbackIcon.textContent = '💡';
+        feedbackTitle.textContent = 'Un valioso aprendizaje:';
+        feedbackDesc.textContent = q.explanation;
+      }
+
+      // Actualizar marcador y racha
+      document.getElementById('score-display').textContent = `${score} Puntos`;
+      document.getElementById('streak-count').textContent = streak;
+
+      // Mostrar botón para avanzar
+      const btnNext = document.getElementById('btn-next');
+      btnNext.classList.remove('hidden');
+      btnNext.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      document.getElementById('screen-quiz').classList.add('hidden');
+      document.getElementById('screen-results').classList.remove('hidden');
+
+      playTone('fanfare');
+
+      // Animación de confeti festivo
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 90,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+
+      const percentage = Math.round((correctAnswersCount / questions.length) * 100);
+
+      document.getElementById('results-participant-name').textContent = participant.name;
+      document.getElementById('results-score').textContent = score;
+      document.getElementById('results-correct-count').textContent = correctAnswersCount;
+      const pctElement = document.getElementById('results-pct');
+      if (pctElement) {
+        pctElement.textContent = `${percentage}%`;
+      }
+
+      const badgeElem = document.getElementById('results-badge');
+      const emojiElem = document.getElementById('results-emoji');
+
+      if (correctAnswersCount >= 8) {
+        badgeElem.textContent = '🌟 Embajador/a de Salud Mental Hogarú';
+        emojiElem.textContent = '🏆';
+      } else if (correctAnswersCount >= 5) {
+        badgeElem.textContent = '🌱 Promotor/a de Estilos de Vida Saludables';
+        emojiElem.textContent = '🎖️';
+      } else {
+        badgeElem.textContent = '💡 Explorador/a de Hábitos Positivos';
+        emojiElem.textContent = '✨';
+      }
+
+      // Asignar el enlace correcto al botón de Google Forms
+      const formsLinkBtn = document.getElementById('link-google-forms');
+      if (formsLinkBtn && GOOGLE_FORMS_URL) {
+        formsLinkBtn.href = GOOGLE_FORMS_URL;
+      }
+    }
+
+    function generateCertificatePDF() {
+      const { jsPDF } = window.jspdf;
+      // Formato horizontal A4 (297 x 210 mm)
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const width = 297;
+      const height = 210;
+
+      // Fondo azul ultra suave
+      doc.setFillColor(248, 250, 252);
+      doc.rect(0, 0, width, height, 'F');
+
+      // Marco exterior corporativo
+      doc.setDrawColor(0, 132, 255);
+      doc.setLineWidth(1.2);
+      doc.roundedRect(10, 10, width - 20, height - 20, 6, 6, 'D');
+
+      // Marco interior elegante
+      doc.setDrawColor(0, 65, 135);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(13, 13, width - 26, height - 26, 4, 4, 'D');
+
+      // Orbe decorativo superior
+      doc.setFillColor(0, 132, 255);
+      doc.circle(width - 25, 25, 6, 'F');
+      doc.setFillColor(0, 65, 135);
+      doc.circle(25, height - 25, 4, 'F');
+
+      // Isotipo circular Hogarú en encabezado
+      doc.setFillColor(0, 65, 135);
+      doc.circle(width / 2, 32, 10, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(255, 255, 255);
+      doc.text('H', width / 2, 35.5, { align: 'center' });
+
+      // Texto de Empresa y Programa
+      doc.setFontSize(18);
+      doc.setTextColor(0, 65, 135);
+      doc.text('H O G A R Ú', width / 2, 48, { align: 'center' });
+
+      doc.setFontSize(10);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'normal');
+      doc.text('PROGRAMA DE ESTILOS DE VIDA SALUDABLE | LA MEJOR VERSIÓN 2026', width / 2, 54, { align: 'center' });
+
+      // Título del Certificado
+      doc.setFontSize(24);
+      doc.setTextColor(0, 132, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('CONSTANCIA DE PARTICIPACIÓN', width / 2, 68, { align: 'center' });
+
+      doc.setFontSize(11);
+      doc.setTextColor(71, 85, 105);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Se otorga el presente reconocimiento a:', width / 2, 77, { align: 'center' });
+
+      // Nombre del Colaborador
+      doc.setFontSize(22);
+      doc.setTextColor(15, 23, 42);
+      doc.setFont('helvetica', 'bold');
+      doc.text(participant.name.toUpperCase(), width / 2, 90, { align: 'center' });
+
+      // Línea divisoria bajo el nombre
+      doc.setDrawColor(0, 132, 255);
+      doc.setLineWidth(0.6);
+      doc.line(60, 93, width - 60, 93);
+
+      // Cargo y Área
+      doc.setFontSize(11);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'italic');
+      doc.text(`Cargo / Área: ${participant.role}`, width / 2, 99, { align: 'center' });
+
+      // Texto de Acreditación del Reto
+      doc.setFontSize(10.5);
+      doc.setTextColor(51, 65, 85);
+      doc.setFont('helvetica', 'normal');
+      const certMessage = `Por haber completado satisfactoriamente el reto: "Mejorar tu salud mental está a tu alcance", demostrando compromiso activo con el autocuidado, la higiene del sueño, el movimiento consciente y la adopción de hábitos saludables sostenibles.`;
+      const splitMsg = doc.splitTextToSize(certMessage, 200);
+      doc.text(splitMsg, width / 2, 110, { align: 'center' });
+
+      // Cuadro de Resultados del Reto
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.5);
+      doc.roundedRect((width / 2) - 60, 128, 120, 22, 3, 3, 'FD');
+
+      const certPct = Math.round((correctAnswersCount / questions.length) * 100);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0, 65, 135);
+      doc.text(`PUNTAJE: ${score} / 1000 PTS (${certPct}%)`, (width / 2) - 30, 137, { align: 'center' });
+      doc.text(`ACIERTOS: ${correctAnswersCount} / 10`, (width / 2) + 30, 137, { align: 'center' });
+
+      const dateStr = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Fecha de expedición: ${dateStr}`, width / 2, 145, { align: 'center' });
+
+      // Firmas institucionales
+      const sigY = 168;
+      doc.setDrawColor(148, 163, 184);
+      doc.setLineWidth(0.4);
+      
+      // Firma Gestión Humana / SST
+      doc.line(45, sigY, 110, sigY);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text('Talento Humano y SST', 77.5, sigY + 5, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Hogarú Colombia', 77.5, sigY + 9, { align: 'center' });
+
+      // Firma Programa Estilos de Vida
+      doc.line(width - 110, sigY, width - 45, sigY);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text('La Mejor Versión 2026', width - 77.5, sigY + 5, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Estilos de Vida Saludable', width - 77.5, sigY + 9, { align: 'center' });
+
+      // Pie del Certificado con valores de marca
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.setFont('helvetica', 'italic');
+      doc.text('Empatía • Comunicación asertiva • Experimentación • Autogestión | www.hogaru.com', width / 2, 196, { align: 'center' });
+
+      // Descargar archivo
+      const sanitizedName = (participant.name || 'Participante').replace(/[^a-zA-Z0-9]/g, '_');
+      doc.save(`Certificado_Salud_Mental_Hogaru_${sanitizedName}.pdf`);
+    }
+
+    function restartGame() {
+      currentQuestionIndex = 0;
+      score = 0;
+      streak = 0;
+      correctAnswersCount = 0;
+      document.getElementById('streak-badge').classList.add('hidden');
+      document.getElementById('screen-results').classList.add('hidden');
+      document.getElementById('screen-welcome').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
