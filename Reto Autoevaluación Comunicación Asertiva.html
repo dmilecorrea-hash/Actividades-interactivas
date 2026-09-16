@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comunicación Asertiva | Hogarú 2026</title>
+
+  <!-- Google Fonts: Open Sans (Tipografía oficial de marca Hogarú) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF para emisión de la Constancia de Participación -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Canvas Confetti para animación de cierre -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Open Sans"', 'sans-serif'],
+          },
+          colors: {
+            hogaru: {
+              primary: '#0084FF',      /* Azul Principal */
+              secondary: '#004187',    /* Azul Secundario Oscuro */
+              light: '#EFF6FF',        /* Azul ultra suave */
+              accent: '#38BDF8',       /* Celeste radiante */
+              surface: '#F8FAFC',
+              dark: '#0F172A'
+            }
+          },
+          animation: {
+            'float': 'float 4s ease-in-out infinite',
+            'pulse-subtle': 'pulseSubtle 2.5s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.88' },
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Elementos decorativos fluidos según manual de marca Hogarú */
+    .blur-orb-1 {
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,132,255,0.15) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(50px);
+      z-index: 0;
+    }
+
+    .blur-orb-2 {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,65,135,0.12) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(60px);
+      z-index: 0;
+    }
+
+    .option-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-card:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: #0084FF;
+      box-shadow: 0 8px 20px -6px rgba(0, 132, 255, 0.2);
+    }
+    .option-card:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    /* Líneas orgánicas sutiles de la marca Hogarú */
+    .sparkle-icon {
+      filter: drop-shadow(0 2px 4px rgba(0, 132, 255, 0.2));
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 via-blue-50/40 to-slate-100 min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden antialiased">
+  
+  <!-- Orbes y siluetas fluidas de fondo -->
+  <div class="blur-orb-1 -top-24 -left-20 pointer-events-none"></div>
+  <div class="blur-orb-2 top-1/2 -right-24 pointer-events-none"></div>
+  <div class="blur-orb-1 bottom-12 left-1/4 pointer-events-none"></div>
+
+  <header class="relative z-10 w-full bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-xs px-4 py-3 sm:py-4 transition-all">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <!-- Logo e isotipo oficial Hogarú -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-hogaru-secondary to-hogaru-primary flex items-center justify-center shadow-md shadow-blue-500/20 text-white font-black text-xl tracking-tight">
+          H
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-xl tracking-tight text-hogaru-secondary">Hogarú</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-hogaru-secondary px-2 py-0.5 rounded-full">Seguridad y Salud en el Trabajo</span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-500 font-medium">Programa de Estilos de Vida Saludable | La Mejor Versión 2026</p>
+        </div>
+      </div>
+
+      <!-- Badge de avance de autoevaluación -->
+      <div id="status-badge" class="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-200 text-hogaru-secondary rounded-full text-xs font-semibold shadow-2xs">
+        <span class="text-hogaru-primary">✨</span>
+        <span>Autoevaluación "Estilos de comunicación"</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 w-full max-w-4xl mx-auto">
+    <div class="w-full bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl shadow-blue-950/5 border border-blue-100/90 p-5 sm:p-8 md:p-10 transition-all duration-300">
+      
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 1: BIENVENIDA Y REGISTRO DEL COLABORADOR -->
+      <!-- ========================================================================= -->
+      <div id="screen-welcome" class="text-center">
+        <!-- Ícono interactivo con estilo Hogarú -->
+        <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-2xl text-hogaru-primary mb-4 shadow-inner">
+          <svg class="w-8 h-8 sm:w-10 sm:h-10 text-hogaru-primary animate-pulse-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </div>
+
+        <div class="inline-block bg-blue-50 text-hogaru-secondary text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-3">
+          🗣️ Reto: Comunicación Asertiva
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-hogaru-secondary leading-tight mb-2">
+          "Comunicarte asertivamente también es una forma de cuidar tu salud mental"
+        </h1>
+
+        <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto mb-6 leading-relaxed">
+          ¡Hola! En Hogarú sabemos que la forma en que nos comunicamos día a día impacta de lleno en nuestra tranquilidad, relaciones y bienestar. Te invitamos a realizar esta autoevaluación eligiendo las situaciones cotidianas con las que en este momento te sientes más identificado.
+        </p>
+
+        <form id="form-participant" onsubmit="startAssessment(event)" class="max-w-md mx-auto space-y-4 text-left bg-slate-50/90 p-5 sm:p-6 rounded-2xl border border-slate-200/80 mb-4">
+          <div>
+            <label for="input-name" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+              Tu Nombre Completo <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-name" 
+              required 
+              placeholder="Ej. Juan David Restrepo" 
+              class="w-full px-4 py-3 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-hogaru-primary focus:border-hogaru-primary outline-none transition"
+            >
+          </div>
+
+          <div>
+            <label for="input-role" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+              Cargo <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-role" 
+              required 
+              placeholder="Ej. Operaciones / Profesional de Limpieza / SST / Administrativo" 
+              class="w-full px-4 py-3 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-hogaru-primary focus:border-hogaru-primary outline-none transition"
+            >
+          </div>
+
+          <div class="pt-2">
+            <button 
+              type="submit" 
+              class="w-full py-3.5 px-6 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition duration-200 flex items-center justify-center gap-2 group text-base"
+            >
+              <span>Iniciar Autoevaluación</span>
+              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <p class="text-xs text-slate-400">
+          🌱 Ejercicio confidencial y práctico. No hay respuestas "buenas" o "malas", solo oportunidades para descubrir tu estilo de comunicación y crecer.
+        </p>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 2: CUESTIONARIO DE SITUACIONES COTIDIANAS -->
+      <!-- ========================================================================= -->
+      <div id="screen-questions" class="hidden">
+        <div class="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-500 mb-2">
+          <span>Situación cotidiana <span id="current-q-number" class="text-hogaru-primary font-bold">1</span> de 9</span>
+          <span class="text-hogaru-secondary font-bold" id="dimension-indicator">Dimensión 1 de 3</span>
+        </div>
+
+        <!-- Barra de Progreso -->
+        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-6 border border-slate-200">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-hogaru-primary to-hogaru-secondary transition-all duration-300 w-[11%]"></div>
+        </div>
+
+        <!-- Encabezado de la Dimensión -->
+        <div class="flex items-center gap-2 mb-2">
+          <span id="dimension-tag" class="inline-block text-[11px] font-bold uppercase tracking-wider text-hogaru-secondary bg-blue-50 border border-blue-100 px-3 py-1 rounded-lg">
+            Dimensión
+          </span>
+        </div>
+
+        <!-- Contexto / Escenario de la Situación -->
+        <h2 id="scenario-title" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-2 leading-snug">
+          Cargando situación...
+        </h2>
+        
+        <p class="text-xs sm:text-sm text-slate-500 mb-6 italic">
+          ¿Cuál de las siguientes reacciones se parece más a lo que harías o pensarías habitualmente?
+        </p>
+
+        <!-- Opciones de Respuesta (Pasivo, Agresivo, Asertivo aleatorizadas) -->
+        <div id="options-container" class="grid grid-cols-1 gap-3 mb-6">
+          <!-- Inyectadas dinámicamente -->
+        </div>
+
+        <!-- Nota sutil para generar tranquilidad -->
+        <div class="text-center">
+          <span class="text-[11px] text-slate-400">
+            Tus elecciones te ayudarán a recibir 3 recomendaciones prácticas personalizadas según tus resultados.
+          </span>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 3: RESULTADOS CON RECOMENDACIONES, FORMULARIO Y CONSTANCIA -->
+      <!-- ========================================================================= -->
+      <div id="screen-results" class="hidden text-center">
+        <!-- Ícono decorativo de florecimiento / bienestar -->
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 rounded-full text-hogaru-primary mb-3 shadow-inner">
+          <span class="text-4xl">🌱</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-hogaru-secondary mb-1">
+          ¡Autoevaluación Completada!
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 mb-5 font-medium">
+          Reto: Comunicación Asertiva | Programa Estilos de Vida Saludable 2026
+        </p>
+
+        <!-- Tarjeta de Diagnóstico y Bienvenida al Cambio -->
+        <div class="bg-gradient-to-br from-blue-50/80 to-indigo-50/40 p-5 sm:p-6 rounded-3xl border border-blue-100 max-w-2xl mx-auto mb-6 text-left">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-xs uppercase tracking-wider font-bold text-hogaru-secondary bg-white px-2.5 py-0.5 rounded-full border border-blue-200">
+              Colaborador(a)
+            </span>
+            <span class="text-sm font-bold text-slate-700" id="results-name"></span>
+          </div>
+
+          <h3 class="text-lg sm:text-xl font-bold text-hogaru-secondary mb-2" id="results-headline">
+            Recomendaciones para potenciar tu Asertividad y Bienestar Mental
+          </h3>
+
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4" id="results-intro">
+            A través de tus respuestas hemos diseñado un plan de acción para que logres expresar tus necesidades con mayor equilibrio, firmeza y tranquilidad, protegiendo tu paz interior y fortaleciendo tus vínculos diarios.
+          </p>
+
+          <!-- Contenedor de las 3 recomendaciones prácticas -->
+          <div id="recommendations-container" class="space-y-3">
+            <!-- Inyectadas dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Tarjeta de Registro de Asistencia Oficial con Google Forms -->
+        <div class="bg-emerald-50/90 p-5 rounded-2xl border-2 border-emerald-300/80 max-w-2xl mx-auto mb-6 text-center shadow-xs">
+          <div class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-emerald-600 text-white mb-2 shadow-sm">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-emerald-950 mb-1">
+            Paso Obligatorio: Registrar tu Participación
+          </h3>
+          <p class="text-xs text-emerald-800 mb-3 leading-relaxed max-w-md mx-auto">
+            Para que Talento Humano y SST acrediten tu participación oficial en el Reto de Comunicación Asertiva, por favor haz clic en el siguiente enlace:
+          </p>
+          <a 
+            id="link-google-forms" 
+            href="https://forms.gle/tb8VnnqN8gL8RSWb8" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="inline-flex items-center justify-center gap-2 py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all text-sm sm:text-base group"
+          >
+            <span>📋 Diligenciar Formulario de Asistencia</span>
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Acciones: Descargar Constancia y Repetir -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+          <!-- Botón de Descarga de Constancia en PDF (sin puntuaciones, solo reconocimiento) -->
+          <button 
+            id="btn-download-cert" 
+            onclick="generateCertificatePDF()" 
+            class="flex-1 py-3.5 px-4 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2 text-sm"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Descargar Constancia (PDF)</span>
+          </button>
+
+          <!-- Botón de reinicio -->
+          <button 
+            onclick="restartAssessment()" 
+            class="py-3.5 px-5 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold rounded-xl transition text-sm flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Volver al inicio</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="relative z-10 w-full py-4 text-center text-xs text-slate-400 border-t border-slate-200/60 bg-white/50 backdrop-blur-xs">
+    <p>Hogarú © 2026 • Valores: Empatía | Comunicación asertiva | Experimentación | Autogestión</p>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: LÓGICA DE LA AUTOEVALUACIÓN, CONSTANCIA Y RECOMENDACIONES -->
+  <!-- ========================================================================= -->
+  <script>
+    // =========================================================================
+    // 👇 LINK OFICIAL DEL FORMULARIO DE ASISTENCIA GOOGLE FORMS 👇
+    // =========================================================================
+    const GOOGLE_FORMS_URL = "https://forms.gle/tb8VnnqN8gL8RSWb8";
+    // =========================================================================
+
+    // 3 Dimensiones clave x 3 Situaciones cotidianas = 9 Situaciones en total
+    // Cada situación ofrece 3 opciones (Pasiva, Agresiva, Asertiva)
+    const dimensions = [
+      {
+        id: "expresion",
+        name: "Dimensión 1: Expresión de Límites y Peticiones",
+        scenarios: [
+          {
+            title: "Sobrecarga de tareas al final de la jornada",
+            description: "Es casi la hora de salida y te solicitan una tarea urgente adicional, eso te aumenta la carga de tareas pendientes y no podrías terminar la jornada laboral según tu horario.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Aceptas la tarea sin decir nada para no incomodar, aunque te toque quedarte hasta tarde con cansancio y frustración interna."
+              },
+              {
+                style: "agresivo",
+                text: "Respondes con molestia: '¡Siempre me dejan todo a última hora a mí! ¿Por qué nunca se planifican mejor?'."
+              },
+              {
+                style: "asertivo",
+                text: "Explicas con calma: 'Agradezco que pienses en mí para apoyar esta tarea, pero en este momento tengo mis prioridades del día al tope. ¿Podemos revisarlo con más tiempo la próxima vez que lo requieras, o ver quién más tiene disponibilidad en este momento?'."
+              }
+            ]
+          },
+          {
+            title: "Interrupciones reiteradas durante la conversación",
+            description: "Estás compartiendo una idea importante y alguien te interrumpe antes de que puedas terminar.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Guardas silencio de inmediato, bajas la mirada y dejas que la otra persona hable sin volver a retomar tu punto."
+              },
+              {
+                style: "agresivo",
+                text: "Elevas la voz y cortas al interlocutor diciendo: '¡Déjame terminar! ¿No sabes respetar los turnos cuando alguien habla?'."
+              },
+              {
+                style: "asertivo",
+                text: "Haces una pausa tranquila y dices con amabilidad y firmeza: 'Dame un momento para cerrar esta idea y con gusto escucho tu punto de vista'."
+              }
+            ]
+          },
+          {
+            title: "Petición de favores personales en horario laboral",
+            description: "Un compañero te pide que cubras una actividad que le correspondía a él por segunda vez en la semana sin una justificación real de fuerza mayor.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Le dices 'Bueno, no pasa nada, yo lo hago', sintiendo molestia por dentro por no haber sido capaz de negarte."
+              },
+              {
+                style: "agresivo",
+                text: "Le dices de forma tajante: '¡Tú siempre te aprovechas de la buena voluntad de la gente! No soy tu empleado'."
+              },
+              {
+                style: "asertivo",
+                text: "Le respondes: 'Te he apoyado con gusto en ocasiones anteriores, pero hoy necesito enfocarme al 100% en mis responsabilidades. Esta vez no podré cubrirte'."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "conflictos",
+        name: "Dimensión 2: Manejo de Conflictos y Desacuerdos",
+        scenarios: [
+          {
+            title: "Desacuerdo con una decisión que afecta tu trabajo",
+            description: "En tu área se toma una decisión con la que consideras que habrá inconvenientes para la ejecución de las tareas o en la seguridad.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Prefieres no opinar pensando: 'Al final ellos mandan, no vale la pena generar desacuerdos ni complicarme'."
+              },
+              {
+                style: "agresivo",
+                text: "Criticas la decisión abiertamente diciendo: 'Esa idea es absurda y demuestra que no conocen el trabajo que hacemos'."
+              },
+              {
+                style: "asertivo",
+                text: "Pides la palabra: 'Entiendo la necesidad de esta medida, sin embargo, desde mi experiencia veo un riesgo en X punto. Quisiera proponer esta alternativa para prevenirlo'."
+              }
+            ]
+          },
+          {
+            title: "Crítica o llamado de atención por un error",
+            description: "Un líder o cliente te señala que hubo un fallo en una tarea que realizaste.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Te disculpas de forma excesiva, te culpas por completo y te sientes angustiado el resto del día sin pedir claridad."
+              },
+              {
+                style: "agresivo",
+                text: "Te pones a la defensiva y buscas excusas culpando a los insumos, al tiempo, la situación o a otras personas."
+              },
+              {
+                style: "asertivo",
+                text: "Escuchas con atención, reconoces el hecho con madurez ('Es verdad, hubo un descuido de mi parte') y preguntas: '¿Qué debo hacer para solucionarlo de inmediato y para que no vuelva a ocurrir?'."
+              }
+            ]
+          },
+          {
+            title: "Rumores o comentarios de pasillo en el equipo",
+            description: "Te enteras de que un compañero hizo un comentario poco constructivo sobre tu trabajo a tus espaldas.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Haces como si nada pasara, pero comienzas a aislarte del grupo y a trabajar desmotivado."
+              },
+              {
+                style: "agresivo",
+                text: "Vas directamente a encararlo frente a los demás con sarcasmo o enojo: 'Si tienes algo que decirme, dímelo en la cara'."
+              },
+              {
+                style: "asertivo",
+                text: "Buscas un espacio privado a solas con esa persona: 'Escuché que tenías una duda sobre mi trabajo. Me gustaría que lo conversemos directamente para resolver las dudas que tengas'."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "emociones",
+        name: "Dimensión 3: Lenguaje y Regulación Emocional",
+        scenarios: [
+          {
+            title: "Momento de alta frustración o estrés acumulado",
+            description: "Las cosas no están saliendo como planeabas en la jornada y sientes que la tensión se te acumula en el cuerpo.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Silencias la frustración, no le cuentas a nadie y continúas trabajando en automático con opresión en el pecho."
+              },
+              {
+                style: "agresivo",
+                text: "Tiras objetos con fuerza, golpeas la mesa o le respondes con aspereza al primero que te haga una pregunta."
+              },
+              {
+                style: "asertivo",
+                text: "Haces una pausa de 2 minutos, aplicas respiración consciente diafragmática para regularte y comunicas: 'Necesito 5 minutos para organizar mis ideas y retomar'."
+              }
+            ]
+          },
+          {
+            title: "Retroalimentación sobre el comportamiento de un compañero",
+            description: "Un compañero suele no realizar su trabajo como corresponde según sus funciones, lo que retrasa o afecta las labores.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Haces tú el trabajo extra para cubrir su falta de responsabilidad y te quejas mentalmente sin decirle una sola palabra."
+              },
+              {
+                style: "agresivo",
+                text: "Le dices en tono acusador: '¡Eres un irresponsable, siempre te aprovechas de los que sí cumplimos!'."
+              },
+              {
+                style: "asertivo",
+                text: "Utilizas la técnica del hecho observable: 'He notado que últimamente no realizas tus tareas de acuerdo con las funciones asignadas, lo que me está afectando mi trabajo. ¿Qué podemos hacer para mejorar esta situación?'."
+              }
+            ]
+          },
+          {
+            title: "Celebrar y reconocer un logro propio o compartido",
+            description: "El equipo completó con éxito una labor difícil gracias a una iniciativa que tú propusiste.",
+            options: [
+              {
+                style: "pasivo",
+                text: "Minimizas el logro: 'No fue nada especial, cualquiera lo hubiera hecho, solo fue suerte'."
+              },
+              {
+                style: "agresivo",
+                text: "Recalcas con superioridad: 'Si no fuera por mi propuesta, no habrían sacado esto adelante'."
+              },
+              {
+                style: "asertivo",
+                text: "Expresas con satisfacción: 'Me alegra mucho que mi idea haya servido y valoro el gran esfuerzo que pusimos todos para lograrlo juntos'."
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // Aplanar las 9 preguntas manteniendo referencia a la dimensión
+    const allScenarios = [];
+    dimensions.forEach(dim => {
+      dim.scenarios.forEach(sc => {
+        allScenarios.push({
+          dimensionName: dim.name,
+          title: sc.title,
+          description: sc.description,
+          options: sc.options
+        });
+      });
+    });
+
+    let participant = { name: '', role: '' };
+    let currentIndex = 0;
+    let styleCounter = {
+      pasivo: 0,
+      agresivo: 0,
+      asertivo: 0
+    };
+
+    // Efectos de sonido procedurales usando Web Audio API
+    let audioCtx = null;
+    function playTone(type) {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'select') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(587.33, now + 0.12);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'complete') {
+          const notes = [392.00, 523.25, 659.25, 783.99]; // G4, C5, E5, G5
+          notes.forEach((freq, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.frequency.value = freq;
+            const startT = now + (idx * 0.1);
+            g.gain.setValueAtTime(0.18, startT);
+            g.gain.exponentialRampToValueAtTime(0.001, startT + 0.4);
+            o.start(startT);
+            o.stop(startT + 0.4);
+          });
+        }
+      } catch (e) {
+        // Silencioso en entornos que bloquean audio
+      }
+    }
+
+    function startAssessment(e) {
+      e.preventDefault();
+      const nameVal = document.getElementById('input-name').value.trim();
+      const roleVal = document.getElementById('input-role').value.trim();
+
+      if (!nameVal || !roleVal) return;
+
+      participant.name = nameVal;
+      participant.role = roleVal;
+
+      document.getElementById('screen-welcome').classList.add('hidden');
+      document.getElementById('screen-questions').classList.remove('hidden');
+      document.getElementById('status-badge').classList.remove('hidden');
+
+      currentIndex = 0;
+      styleCounter = { pasivo: 0, agresivo: 0, asertivo: 0 };
+
+      renderCurrentScenario();
+    }
+
+    // Barajador para que las opciones no aparezcan siempre en el mismo orden
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function renderCurrentScenario() {
+      const sc = allScenarios[currentIndex];
+
+      // Actualizar número y barra de progreso
+      document.getElementById('current-q-number').textContent = currentIndex + 1;
+      const progressPct = ((currentIndex + 1) / allScenarios.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPct}%`;
+      
+      const currentDim = Math.floor(currentIndex / 3) + 1;
+      document.getElementById('dimension-indicator').textContent = `Dimensión ${currentDim} de 3`;
+      document.getElementById('dimension-tag').textContent = sc.dimensionName;
+
+      // Textos
+      document.getElementById('scenario-title').textContent = sc.title;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      // Descripción del caso
+      const caseDesc = document.createElement('div');
+      caseDesc.className = 'bg-blue-50/70 border border-blue-100 rounded-2xl p-4 text-xs sm:text-sm text-slate-700 leading-relaxed font-medium mb-1';
+      caseDesc.innerHTML = `<span class="font-bold text-hogaru-secondary">Situación:</span> ${sc.description}`;
+      container.appendChild(caseDesc);
+
+      // Opciones aleatorizadas
+      const shuffledOptions = shuffleArray(sc.options);
+      const letters = ['A', 'B', 'C'];
+
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-card w-full text-left p-4 sm:p-4.5 rounded-2xl border-2 border-slate-200 bg-white flex items-start gap-3.5 focus:outline-none';
+        btn.onclick = () => selectOption(opt.style, btn);
+
+        btn.innerHTML = `
+          <span class="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-slate-100 font-bold text-xs sm:text-sm text-slate-600 flex items-center justify-center border border-slate-200 opt-letter">
+            ${letters[idx]}
+          </span>
+          <span class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed pt-0.5">
+            ${opt.text}
+          </span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectOption(styleChosen, btnElement) {
+      playTone('select');
+      styleCounter[styleChosen]++;
+
+      // Resaltar visualmente la opción elegida brevemente
+      btnElement.classList.remove('border-slate-200', 'bg-white');
+      btnElement.classList.add('border-hogaru-primary', 'bg-blue-50/80');
+      const letter = btnElement.querySelector('.opt-letter');
+      if (letter) {
+        letter.classList.add('bg-hogaru-primary', 'text-white', 'border-hogaru-primary');
+      }
+
+      // Desactivar botones para evitar doble clic
+      const allBtns = document.querySelectorAll('#options-container button');
+      allBtns.forEach(b => b.disabled = true);
+
+      // Transición suave a la siguiente pregunta
+      setTimeout(() => {
+        currentIndex++;
+        if (currentIndex < allScenarios.length) {
+          renderCurrentScenario();
+        } else {
+          showResultsScreen();
+        }
+      }, 350);
+    }
+
+    function showResultsScreen() {
+      document.getElementById('screen-questions').classList.add('hidden');
+      document.getElementById('screen-results').classList.remove('hidden');
+
+      playTone('complete');
+
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 85,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+
+      document.getElementById('results-name').textContent = participant.name;
+
+      // Determinar cuál fue el estilo predominante sin etiquetar al usuario negativamente
+      const { pasivo, agresivo, asertivo } = styleCounter;
+      let dominant = 'asertivo';
+      if (pasivo >= agresivo && pasivo >= asertivo) {
+        dominant = 'pasivo';
+      } else if (agresivo >= pasivo && agresivo >= asertivo) {
+        dominant = 'agresivo';
+      } else {
+        dominant = 'asertivo';
+      }
+
+      // Diseñar las 3 recomendaciones de acuerdo con la tendencia (con ejercicios cotidianos que cualquier persona puede aplicar)
+      let recommendations = [];
+      const headline = document.getElementById('results-headline');
+      const intro = document.getElementById('results-intro');
+
+      if (dominant === 'pasivo') {
+        headline.textContent = "3 Claves Prácticas para Fortalecer tu Voz y tus Límites";
+        intro.textContent = "Tus elecciones reflejan que tienes una gran empatía y consideración hacia los demás. Para cuidar tu salud mental y evitar la sobrecarga interna, te recomendamos estos 3 ejercicios cotidianos para expresar tus necesidades con mayor seguridad y sin culpa:";
+        
+        recommendations = [
+          {
+            num: "1",
+            title: "La Fórmula del 'No' Asertivo en 3 Pasos",
+            desc: "Cuando una tarea exceda tu capacidad, evita decir 'sí' por compromiso. Aplica esta estructura: 1) Agradece ('Gracias por tenerme en cuenta'), 2) Establece el límite ('En este momento no puedo asumir más compromisos'), y 3) Ofrece una opción ('Puedo revisarlo mañana o coordinar juntos otra alternativa').",
+            badge: "Ejercicio Cotidiano"
+          },
+          {
+            num: "2",
+            title: "El Desafío de Micro-Límites (30 Días)",
+            desc: "Empieza entrenando en situaciones seguras de bajo riesgo: practica decir amablemente 'no' a una pequeña cosa diaria fuera del trabajo (como elegir tú la comida, cambiar el canal o declinar un café si no te apetece). Esto crea la memoria muscular para cuando debas poner límites laborales.",
+            badge: "Entrenamiento Diario"
+          },
+          {
+            num: "3",
+            title: "Comunícate en Primera Persona ('Mensajes YO')",
+            desc: "En lugar de callar por temor al conflicto, habla desde tu propia vivencia sin señalar a nadie: cambia el silencio por 'Yo necesito un momento para organizar mi entrega' o 'Yo siento que podemos buscar otra forma'. Expresar lo que sientes es tu derecho legítimo.",
+            badge: "Herramienta Práctica"
+          }
+        ];
+      } else if (dominant === 'agresivo') {
+        headline.textContent = "3 Claves Prácticas para Canalizar la Firmeza con Calma";
+        intro.textContent = "Tus respuestas demuestran que tienes iniciativa, seguridad y capacidad para defender tus puntos de vista. Para evitar el desgaste emocional y cuidar el clima con tu equipo, te proponemos estos 3 ejercicios sencillos para transformar la reactividad en asertividad constructiva:";
+        
+        recommendations = [
+          {
+            num: "1",
+            title: "La Pausa de 3 Respiraciones Diafragmáticas (4-4-6)",
+            desc: "Ante una molestia o error ajeno, nunca respondas en los primeros 5 segundos. Inhala en 4 segundos sintiendo los pies en el suelo, retén 4 y exhala suave en 6. Esto desactiva la respuesta de ataque de tu cerebro y te permite responder con claridad estratégica.",
+            badge: "Regulación Somática"
+          },
+          {
+            num: "2",
+            title: "Describe Hechos Observables (Método Descriptivo)",
+            desc: "Sustituye juicios como '¡Siempre lo haces mal!' o '¡Eres impuntual!' por datos neutros que nadie pueda refutar: 'Ayer acordamos la entrega a las 9:00 a.m. y llegó a las 11:00 a.m. Esto nos retrasó en el cronograma. ¿Cómo podemos coordinarnos mejor hoy?'.",
+            badge: "Ejercicio de Comunicación"
+          },
+          {
+            num: "3",
+            title: "La Regla de 'Escuchar para Comprender, no para Responder'",
+            desc: "En tu próxima conversación difícil, haz el compromiso de no interrumpir ni preparar tu réplica mental mientras el otro habla. Al terminar, parafrasea: 'Si te entendí bien, lo que necesitas es... ¿es correcto?'. Generarás respeto mutuo inmediato.",
+            badge: "Hábito Cotidiano"
+          }
+        ];
+      } else {
+        headline.textContent = "3 Claves Prácticas para Consolidar tu Liderazgo Asertivo";
+        intro.textContent = "Tus elecciones evidencian un excelente equilibrio entre el respeto por tus propias necesidades y la consideración hacia los demás. Para continuar siendo un referente de bienestar y comunicación en Hogarú, te sugerimos estos 3 ejercicios de perfeccionamiento:";
+        
+        recommendations = [
+          {
+            num: "1",
+            title: "Técnica del 'Disco Rayado' Calmado",
+            desc: "Cuando alguien insista en que rompas un acuerdo o límite establecido, repite tu postura central con el mismo tono amable, neutro y constante, sin molestarte ni dar explicaciones excesivas: 'Entiendo tu urgencia, pero como te comenté, hoy mi prioridad asignada es esta entrega'.",
+            badge: "Técnica Avanzada"
+          },
+          {
+            num: "2",
+            title: "Técnica del 'Banco de Niebla' ante Críticas",
+            desc: "Si recibes una crítica acalorada, reconoce serenamente la parte que sea cierta sin ponerte a la defensiva ni perder tu postura: 'Tienes razón en que el formato varió, vamos a ajustarlo juntos para que quede según lo esperado'. Así disuelves la tensión en segundos.",
+            badge: "Resolución Positiva"
+          },
+          {
+            num: "3",
+            title: "Crea Alianzas de Apoyo (Buddy System Asertivo)",
+            desc: "Sé un promotor activo del bienestar: acuerda con un compañero de confianza darse retroalimentación honesta y respetuosa después de reuniones o jornadas complejas, preguntándose: '¿Cómo sentiste nuestra comunicación hoy? ¿Qué podemos ajustar?'",
+            badge: "Cultura de Equipo"
+          }
+        ];
+      }
+
+      // Renderizar tarjetas de recomendaciones
+      const recContainer = document.getElementById('recommendations-container');
+      recContainer.innerHTML = '';
+
+      recommendations.forEach(rec => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded-2xl border border-blue-100 shadow-2xs text-left';
+        card.innerHTML = `
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 w-8 h-8 rounded-xl bg-blue-100 text-hogaru-secondary font-bold text-sm flex items-center justify-center">
+              ${rec.num}
+            </span>
+            <div class="flex-1">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <h4 class="font-bold text-slate-800 text-sm sm:text-base">${rec.title}</h4>
+                <span class="text-[10px] uppercase font-bold text-hogaru-primary bg-blue-50 px-2 py-0.5 rounded-md">
+                  ${rec.badge}
+                </span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${rec.desc}</p>
+            </div>
+          </div>
+        `;
+        recContainer.appendChild(card);
+      });
+
+      // Asegurar el enlace de Google Forms
+      const formsLinkBtn = document.getElementById('link-google-forms');
+      if (formsLinkBtn && GOOGLE_FORMS_URL) {
+        formsLinkBtn.href = GOOGLE_FORMS_URL;
+      }
+    }
+
+    function generateCertificatePDF() {
+      const { jsPDF } = window.jspdf;
+      // Formato horizontal A4 (297 x 210 mm)
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const width = 297;
+      const height = 210;
+
+      // Fondo azul ultra suave corporativo Hogarú
+      doc.setFillColor(248, 250, 252);
+      doc.rect(0, 0, width, height, 'F');
+
+      // Marco exterior
+      doc.setDrawColor(0, 132, 255);
+      doc.setLineWidth(1.2);
+      doc.roundedRect(10, 10, width - 20, height - 20, 6, 6, 'D');
+
+      // Marco interior sutil
+      doc.setDrawColor(0, 65, 135);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(13, 13, width - 26, height - 26, 4, 4, 'D');
+
+      // Detalles decorativos geométricos suaves
+      doc.setFillColor(0, 132, 255);
+      doc.circle(width - 25, 25, 5, 'F');
+      doc.setFillColor(0, 65, 135);
+      doc.circle(25, height - 25, 4, 'F');
+
+      // Isotipo circular Hogarú
+      doc.setFillColor(0, 65, 135);
+      doc.circle(width / 2, 30, 9, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(255, 255, 255);
+      doc.text('H', width / 2, 33.5, { align: 'center' });
+
+      // Cabecera Institucional
+      doc.setFontSize(18);
+      doc.setTextColor(0, 65, 135);
+      doc.setFont('helvetica', 'bold');
+      doc.text('H O G A R Ú', width / 2, 45, { align: 'center' });
+
+      doc.setFontSize(9.5);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'normal');
+      doc.text('PROGRAMA DE ESTILOS DE VIDA SALUDABLE | LA MEJOR VERSIÓN 2026', width / 2, 51, { align: 'center' });
+
+      // Título de la Constancia (Sin calificaciones ni clasificaciones)
+      doc.setFontSize(23);
+      doc.setTextColor(0, 132, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('CONSTANCIA DE PARTICIPACIÓN', width / 2, 65, { align: 'center' });
+
+      doc.setFontSize(10.5);
+      doc.setTextColor(71, 85, 105);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Talento Humano y SST otorga el presente reconocimiento a:', width / 2, 74, { align: 'center' });
+
+      // Nombre del Colaborador
+      doc.setFontSize(22);
+      doc.setTextColor(15, 23, 42);
+      doc.setFont('helvetica', 'bold');
+      doc.text((participant.name || 'COLABORADOR HOGARÚ').toUpperCase(), width / 2, 87, { align: 'center' });
+
+      // Línea divisoria elegante
+      doc.setDrawColor(0, 132, 255);
+      doc.setLineWidth(0.6);
+      doc.line(60, 90, width - 60, 90);
+
+      // Cargo / Área
+      doc.setFontSize(11);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'italic');
+      doc.text(`Cargo: ${participant.role || 'Colaborador Hogarú'}`, width / 2, 96, { align: 'center' });
+
+      // Mensaje Motivador y de Reconocimiento
+      doc.setFontSize(10.5);
+      doc.setTextColor(51, 65, 85);
+      doc.setFont('helvetica', 'normal');
+      const certMessage = `Por tu valiosa participación y compromiso activo en la autoevaluación del Reto "Comunicación Asertiva", demostrando disposición para cultivar relaciones basadas en el respeto mutuo, la claridad y el autocuidado emocional.`;
+      const splitMsg = doc.splitTextToSize(certMessage, 210);
+      doc.text(splitMsg, width / 2, 108, { align: 'center' });
+
+      // Lema Oficial de la Campaña en caja destacada
+      doc.setFillColor(239, 246, 255);
+      doc.setDrawColor(186, 230, 253);
+      doc.setLineWidth(0.5);
+      doc.roundedRect((width / 2) - 95, 124, 190, 16, 3, 3, 'FD');
+
+      doc.setFontSize(9.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0, 65, 135);
+      doc.text('“Comunicarte asertivamente también es una forma de cuidar tu salud mental”', width / 2, 133.5, { align: 'center' });
+
+      // Fecha
+      const dateStr = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Constancia emitida el ${dateStr}`, width / 2, 149, { align: 'center' });
+
+      // Firmas Institucionales de Responsables
+      const sigY = 168;
+      doc.setDrawColor(148, 163, 184);
+      doc.setLineWidth(0.4);
+
+      // Firma 1: Talento Humano y SST
+      doc.line(45, sigY, 115, sigY);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text('Talento Humano y SST', 80, sigY + 5, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Responsable de Campaña | Hogarú', 80, sigY + 9, { align: 'center' });
+
+      // Firma 2: Programa Estilos de Vida Saludable
+      doc.line(width - 115, sigY, width - 45, sigY);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text('Estilos de Vida Saludable', width - 80, sigY + 5, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('La Mejor Versión 2026', width - 80, sigY + 9, { align: 'center' });
+
+      // Valores corporativos de marca al pie
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.setFont('helvetica', 'italic');
+      doc.text('Empatía • Comunicación asertiva • Experimentación • Autogestión | www.hogaru.com', width / 2, 196, { align: 'center' });
+
+      // Guardar PDF
+      const sanitizedName = (participant.name || 'Participante').replace(/[^a-zA-Z0-9]/g, '_');
+      doc.save(`Constancia_Comunicacion_Asertiva_Hogaru_${sanitizedName}.pdf`);
+    }
+
+    function restartAssessment() {
+      currentIndex = 0;
+      styleCounter = { pasivo: 0, agresivo: 0, asertivo: 0 };
+      document.getElementById('status-badge').classList.add('hidden');
+      document.getElementById('screen-results').classList.add('hidden');
+      document.getElementById('screen-welcome').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
