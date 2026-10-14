@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Comportamiento Seguro: Yo Elijo Cuidarme | Hogarú 2026</title>
+
+  <!-- Google Fonts: Open Sans (Tipografía oficial de marca Hogarú) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF para emisión de la Certificación Oficial en PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Canvas Confetti para animación de celebración -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Open Sans"', 'sans-serif'],
+          },
+          colors: {
+            hogaru: {
+              primary: '#0084FF',      /* Azul Principal Hogarú */
+              secondary: '#004187',    /* Azul Secundario Oscuro */
+              light: '#EFF6FF',        /* Fondo azul ultra suave */
+              accent: '#38BDF8',       /* Celeste radiante */
+              surface: '#F8FAFC',
+              dark: '#0F172A',
+              emerald: '#10B981',
+              amber: '#F59E0B'
+            }
+          },
+          animation: {
+            'float': 'float 4s ease-in-out infinite',
+            'pulse-subtle': 'pulseSubtle 2.5s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.88' },
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* Prevención del auto-zoom brusco en iPhone / Safari */
+    @media screen and (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+
+    /* Elementos decorativos de fondo con aceleración por hardware y escala móvil */
+    .blur-orb-1, .blur-orb-2 {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+    }
+
+    .blur-orb-1 {
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(0,132,255,0.14) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(35px);
+    }
+    @media (min-width: 640px) {
+      .blur-orb-1 {
+        width: 360px;
+        height: 360px;
+        filter: blur(50px);
+      }
+    }
+
+    .blur-orb-2 {
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(0,65,135,0.12) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(40px);
+    }
+    @media (min-width: 640px) {
+      .blur-orb-2 {
+        width: 320px;
+        height: 320px;
+        filter: blur(60px);
+      }
+    }
+
+    /* Ergonomía táctil para opciones en celular */
+    .option-card {
+      touch-action: manipulation;
+      transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1), 
+                  background-color 0.18s ease, 
+                  border-color 0.18s ease;
+    }
+    .option-card:hover:not(:disabled) {
+      border-color: #0084FF;
+      box-shadow: 0 4px 14px -2px rgba(0, 132, 255, 0.18);
+    }
+    .option-card:active:not(:disabled) {
+      transform: scale(0.985);
+      background-color: #F0F7FF;
+    }
+
+    /* Animación de entrada fluida */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 via-blue-50/40 to-slate-100 min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden antialiased pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]">
+  
+  <!-- Orbes decorativos orgánicos -->
+  <div class="blur-orb-1 -top-16 -left-14"></div>
+  <div class="blur-orb-2 top-1/2 -right-16"></div>
+  <div class="blur-orb-1 bottom-10 left-1/4"></div>
+
+  <!-- Encabezado Institucional Hogarú optimizado para celular -->
+  <header class="relative z-10 w-full bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-xs px-3 sm:px-4 py-2.5 sm:py-3.5 transition-all">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <!-- Isotipo Hogarú -->
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-hogaru-secondary to-hogaru-primary flex items-center justify-center shadow-md shadow-blue-500/20 text-white font-black text-lg sm:text-xl tracking-tight flex-shrink-0">
+          H
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="font-extrabold text-lg sm:text-xl tracking-tight text-hogaru-secondary leading-none">Hogarú</span>
+            <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-hogaru-secondary px-1.5 py-0.5 rounded-full leading-none">SBC • SST</span>
+          </div>
+          <p class="text-[10px] sm:text-xs text-slate-500 font-medium truncate mt-0.5">Seguridad Basada en el Comportamiento | 2026</p>
+        </div>
+      </div>
+
+      <!-- Badge de avance / bloque compacto -->
+      <div id="status-badge" class="hidden xs:flex sm:flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 bg-blue-50 border border-blue-200 text-hogaru-secondary rounded-full text-[11px] sm:text-xs font-semibold shadow-2xs flex-shrink-0">
+        <span class="text-hogaru-primary text-xs">🛡️</span>
+        <span id="badge-block-name" class="hidden sm:inline">Reto Interactivo</span>
+        <span class="sm:hidden font-bold">Reto SBC</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 flex-1 flex items-center justify-center p-2.5 sm:p-5 md:p-6 w-full max-w-4xl mx-auto">
+    <div class="w-full bg-white/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl shadow-blue-950/5 border border-blue-100/90 p-3.5 sm:p-7 md:p-9 transition-all duration-300">
+      
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 1: BIENVENIDA Y REGISTRO DEL TRABAJADOR -->
+      <!-- ========================================================================= -->
+      <div id="screen-welcome" class="text-center">
+        <div class="inline-flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 bg-blue-50 rounded-2xl text-hogaru-primary mb-2.5 sm:mb-3 shadow-inner">
+          <svg class="w-8 h-8 sm:w-11 sm:h-11 text-hogaru-primary animate-pulse-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+
+        <div class="inline-block bg-blue-50 text-hogaru-secondary text-[11px] sm:text-xs md:text-sm font-semibold px-3 py-1 sm:px-4 sm:py-1.5 rounded-full mb-2 sm:mb-3">
+          🛡️ Campaña: La Mejor Versión 2026
+        </div>
+
+        <h1 class="text-xl sm:text-2xl md:text-4xl font-extrabold text-hogaru-secondary leading-tight mb-2">
+          "Comportamiento Seguro: Yo Elijo Cuidarme"
+        </h1>
+
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 max-w-xl mx-auto mb-4 sm:mb-6 leading-relaxed px-1">
+          ¡Hola! En Hogarú cuidamos de ti en cada servicio. Participa en este reto interactivo de <strong>20 situaciones cotidianas</strong> para fortalecer tus decisiones seguras, prevenir accidentes y cuidar tu bienestar osteomuscular.
+        </p>
+
+        <!-- Bloques informativos optimizados para pantallas pequeñas -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 max-w-2xl mx-auto mb-4 sm:mb-6 text-left">
+          <div class="bg-blue-50/70 p-2 sm:p-2.5 rounded-xl border border-blue-100 text-xs">
+            <span class="font-bold text-hogaru-secondary block text-[11px] sm:text-xs">Bloque 1</span>
+            <span class="text-slate-600 text-[10px] sm:text-[11px] leading-tight block">Identificación de peligros</span>
+          </div>
+          <div class="bg-blue-50/70 p-2 sm:p-2.5 rounded-xl border border-blue-100 text-xs">
+            <span class="font-bold text-hogaru-secondary block text-[11px] sm:text-xs">Bloque 2</span>
+            <span class="text-slate-600 text-[10px] sm:text-[11px] leading-tight block">Conductas y EPPs</span>
+          </div>
+          <div class="bg-blue-50/70 p-2 sm:p-2.5 rounded-xl border border-blue-100 text-xs">
+            <span class="font-bold text-hogaru-secondary block text-[11px] sm:text-xs">Bloque 3</span>
+            <span class="text-slate-600 text-[10px] sm:text-[11px] leading-tight block">Prevención postural</span>
+          </div>
+          <div class="bg-blue-50/70 p-2 sm:p-2.5 rounded-xl border border-blue-100 text-xs">
+            <span class="font-bold text-hogaru-secondary block text-[11px] sm:text-xs">Bloque 4</span>
+            <span class="text-slate-600 text-[10px] sm:text-[11px] leading-tight block">Reportes y decisiones</span>
+          </div>
+        </div>
+
+        <form id="form-participant" onsubmit="startChallenge(event)" class="max-w-md mx-auto space-y-3 sm:space-y-3.5 text-left bg-slate-50/90 p-4 sm:p-6 rounded-2xl border border-slate-200/80 mb-3 shadow-2xs">
+          <div>
+            <label for="input-name" class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              Nombre Completo <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-name" 
+              required 
+              placeholder="Ej. Carmen Elena Rodríguez" 
+              class="w-full px-3.5 py-2.5 sm:py-3 text-base sm:text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-hogaru-primary focus:border-hogaru-primary outline-none transition"
+            >
+          </div>
+
+          <div>
+            <label for="input-role" class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+              Cargo / Rol en Hogarú <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="input-role" 
+              required 
+              placeholder="Ej. Profesional de Limpieza / Operaciones" 
+              class="w-full px-3.5 py-2.5 sm:py-3 text-base sm:text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-hogaru-primary focus:border-hogaru-primary outline-none transition"
+            >
+          </div>
+
+          <div class="pt-1">
+            <button 
+              type="submit" 
+              class="w-full py-3.5 px-5 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition duration-200 flex items-center justify-center gap-2 group text-sm sm:text-base cursor-pointer min-h-[48px]"
+            >
+              <span>¡Comenzar el Reto!</span>
+              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <p class="text-[11px] sm:text-xs text-slate-400 px-2 leading-tight">
+          💡 Diseñado para responder cómodamente desde tu celular en cualquier momento del día. Al finalizar obtendrás tu Certificado Oficial.
+        </p>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 2: PREGUNTAS Y RETROALIMENTACIÓN INMEDIATA -->
+      <!-- ========================================================================= -->
+      <div id="screen-quiz" class="hidden">
+        <!-- Indicadores superiores -->
+        <div class="flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-500 mb-1.5">
+          <span>Pregunta <span id="current-q-number" class="text-hogaru-primary font-bold">1</span> de 20</span>
+          <span class="text-hogaru-secondary font-bold" id="score-display">0 Puntos</span>
+        </div>
+
+        <!-- Barra de Progreso -->
+        <div class="w-full h-2 sm:h-2.5 bg-slate-100 rounded-full overflow-hidden mb-3.5 sm:mb-5 border border-slate-200">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-hogaru-primary to-hogaru-secondary transition-all duration-300 w-[5%]"></div>
+        </div>
+
+        <!-- Bloque y Categoría -->
+        <div class="flex items-center gap-2 mb-2">
+          <span id="question-block" class="inline-block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-hogaru-secondary bg-blue-50 border border-blue-100 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg">
+            Bloque
+          </span>
+        </div>
+
+        <!-- Título y Enunciado adaptado para lectura en pantalla móvil -->
+        <div class="mb-4">
+          <div id="question-title-badge" class="text-xs sm:text-sm font-bold text-hogaru-secondary mb-1"></div>
+          <div id="question-scenario-box" class="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/80 text-xs sm:text-sm md:text-base text-slate-800 leading-relaxed font-semibold">
+            Cargando situación...
+          </div>
+        </div>
+
+        <!-- Opciones de Respuesta -->
+        <div id="options-container" class="grid grid-cols-1 gap-2 sm:gap-2.5 mb-4">
+          <!-- Inyectadas dinámicamente -->
+        </div>
+
+        <!-- Panel de Retroalimentación Inmediata -->
+        <div id="feedback-panel" class="hidden rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border transition-all duration-300 mb-4 animate-fadeIn">
+          <div class="flex items-start gap-2.5 sm:gap-3">
+            <div id="feedback-icon" class="text-xl sm:text-2xl mt-0.5 flex-shrink-0"></div>
+            <div class="flex-1 min-w-0">
+              <h3 id="feedback-title" class="font-bold text-xs sm:text-sm md:text-base mb-1"></h3>
+              <p id="feedback-desc" class="text-xs sm:text-sm leading-relaxed"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de navegación y reinicio temprano adaptados para pulgar en móvil -->
+        <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 pt-1">
+          <button 
+            id="btn-restart-early" 
+            type="button"
+            onclick="restartChallenge()" 
+            class="hidden w-full sm:w-auto py-2.5 px-4 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 cursor-pointer min-h-[44px]"
+          >
+            <span>🔄 Reiniciar ejercicio</span>
+          </button>
+
+          <button 
+            id="btn-next" 
+            type="button"
+            onclick="nextQuestion()" 
+            class="hidden w-full sm:w-auto sm:ml-auto py-3 px-6 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl shadow-md transition duration-200 text-sm sm:text-base cursor-pointer min-h-[48px] text-center"
+          >
+            Siguiente Pregunta ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PANTALLA 3: RESULTADOS, COMPROMISOS, ASISTENCIA Y CERTIFICADO -->
+      <!-- ========================================================================= -->
+      <div id="screen-results" class="hidden text-center">
+        <!-- Ícono decorativo de logro o reinicio -->
+        <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-full text-hogaru-primary mb-2.5 shadow-inner">
+          <span class="text-3xl sm:text-4xl" id="results-emoji">🏆</span>
+        </div>
+
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-hogaru-secondary mb-1" id="results-main-title">
+          ¡Reto Completado!
+        </h2>
+        <p class="text-[11px] sm:text-xs md:text-sm text-slate-500 mb-4 font-medium">
+          Campaña: La Mejor Versión 2026 | Seguridad Basada en el Comportamiento
+        </p>
+
+        <!-- Tarjeta de Resumen de Desempeño -->
+        <div class="bg-gradient-to-br from-blue-50/80 to-indigo-50/40 p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-blue-100 max-w-xl mx-auto mb-4 text-left">
+          <div class="flex items-center justify-between gap-2 mb-2.5">
+            <div class="min-w-0">
+              <span class="text-[10px] sm:text-[11px] uppercase tracking-wider font-bold text-slate-500 block">Colaborador(a)</span>
+              <span class="text-sm sm:text-base md:text-lg font-bold text-hogaru-secondary truncate block" id="results-participant-name"></span>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <span class="text-[10px] sm:text-[11px] uppercase tracking-wider font-bold text-slate-500 block">Aciertos</span>
+              <span class="text-base sm:text-lg font-bold text-hogaru-primary"><span id="results-correct">0</span> / 20</span>
+            </div>
+          </div>
+
+          <div class="w-full bg-white rounded-full h-2.5 sm:h-3 border border-blue-200 overflow-hidden mb-2.5">
+            <div id="results-progress-bar" class="h-full bg-gradient-to-r from-hogaru-primary to-hogaru-secondary transition-all duration-500 w-0"></div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] sm:text-xs text-slate-600 font-semibold gap-2 flex-wrap">
+            <span id="results-badge" class="bg-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-blue-200 text-hogaru-secondary text-[10px] sm:text-xs">Nivel: Guardián</span>
+            <span id="results-pct" class="text-hogaru-secondary font-bold text-xs sm:text-sm">0%</span>
+          </div>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- CASO A: SI TUVO ERRORES (Menos de 20 aciertos) -> BLOQUEO Y REINTENTO -->
+        <!-- ===================================================================== -->
+        <div id="results-retry-panel" class="hidden max-w-xl mx-auto mb-4">
+          <div class="bg-rose-50/90 p-4 sm:p-5 rounded-xl sm:rounded-2xl border-2 border-rose-300 text-left shadow-xs mb-3">
+            <div class="flex items-start gap-2.5 sm:gap-3">
+              <span class="text-2xl sm:text-3xl flex-shrink-0">⚠️</span>
+              <div>
+                <h3 class="font-extrabold text-rose-900 text-sm sm:text-base mb-1">
+                  Debes responder todas las preguntas correctamente
+                </h3>
+                <p class="text-xs sm:text-sm text-rose-800 leading-relaxed mb-2.5">
+                  Para habilitar el <strong>registro de asistencia oficial</strong> y descargar tu <strong>Certificado de Participación</strong>, es requisito indispensable responder el <strong class="underline decoration-rose-400">100% de las 20 situaciones</strong> de forma correcta.
+                </p>
+                <div class="p-2.5 bg-white/80 rounded-xl border border-rose-200 text-[11px] sm:text-xs text-slate-700 font-medium">
+                  📊 Tuviste <strong class="text-rose-600" id="errors-count-text">0 errores</strong> en este intento. ¡Repasa los comportamientos seguros y vuelve a realizar el ejercicio para lograr tu acreditación!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de reintento obligatorio -->
+          <button 
+            type="button"
+            onclick="restartChallenge()" 
+            class="w-full py-3.5 px-5 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl sm:rounded-2xl shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer min-h-[48px]"
+          >
+            <span class="text-lg">🔄</span>
+            <span>Volver a realizar el ejercicio</span>
+          </button>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- CASO B: SI RESPONDIÓ 20/20 (100% ACIERTOS) -> HABILITADO              -->
+        <!-- ===================================================================== -->
+        <div id="results-success-panel" class="hidden">
+          <!-- Mensaje de Aprobación Plena -->
+          <div class="bg-emerald-50/90 border border-emerald-200 text-emerald-900 p-3 sm:p-4 rounded-xl sm:rounded-2xl max-w-xl mx-auto mb-4 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 text-left sm:text-center">
+            <span class="text-lg flex-shrink-0">🎉</span>
+            <span>¡Felicitaciones! Has respondido el 100% de las situaciones correctamente. Cumples con todos los criterios de seguridad.</span>
+          </div>
+
+          <!-- Tarjeta de los 3 Compromisos Prácticos de Cierre -->
+          <div class="bg-white p-4 sm:p-5 rounded-xl sm:rounded-2xl border-2 border-blue-200/80 max-w-xl mx-auto mb-4 text-left shadow-xs">
+            <div class="flex items-center gap-1.5 mb-2.5 text-hogaru-secondary font-bold text-xs sm:text-base">
+              <span class="text-lg">🌟</span>
+              <span>Tus 3 Compromisos Prácticos para el Próximo Servicio:</span>
+            </div>
+
+            <ul class="space-y-2 sm:space-y-2.5 text-xs sm:text-sm text-slate-700">
+              <li class="flex items-start gap-2 bg-blue-50/50 p-2.5 sm:p-3 rounded-xl border border-blue-100">
+                <span class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-hogaru-primary text-white font-bold text-[11px] sm:text-xs flex items-center justify-center mt-0.5">1</span>
+                <span><strong>Inspeccionar el área y los elementos de trabajo</strong> antes de comenzar cualquier labor para prevenir caídas, golpes o riesgos.</span>
+              </li>
+              <li class="flex items-start gap-2 bg-blue-50/50 p-2.5 sm:p-3 rounded-xl border border-blue-100">
+                <span class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-hogaru-primary text-white font-bold text-[11px] sm:text-xs flex items-center justify-center mt-0.5">2</span>
+                <span><strong>Utilizar los elementos de protección personal (EPPs)</strong>, realizar las pausas activas programadas y cumplir con los procedimientos establecidos.</span>
+              </li>
+              <li class="flex items-start gap-2 bg-blue-50/50 p-2.5 sm:p-3 rounded-xl border border-blue-100">
+                <span class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-hogaru-primary text-white font-bold text-[11px] sm:text-xs flex items-center justify-center mt-0.5">3</span>
+                <span><strong>Reportar inmediatamente a través del chat del servicio</strong> las condiciones inseguras y los accidentes, sin improvisar soluciones.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Tarjeta de Registro de Asistencia HABILITADA -->
+          <div class="bg-emerald-50/90 p-4 sm:p-5 rounded-xl sm:rounded-2xl border-2 border-emerald-300/80 max-w-xl mx-auto mb-4 text-center shadow-xs">
+            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 text-white mb-1.5 shadow-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-emerald-950 mb-1">
+              Paso Obligatorio: Registrar tu Asistencia
+            </h3>
+            <p class="text-[11px] sm:text-xs text-emerald-800 mb-3 leading-relaxed max-w-md mx-auto">
+              Para validar oficialmente tu participación en la campaña ante Talento Humano y SST, haz clic en el siguiente botón:
+            </p>
+            <a 
+              id="link-google-forms" 
+              href="https://forms.gle/ZKpqjbp6S17wua7n9" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all text-sm sm:text-base group min-h-[48px]"
+            >
+              <span>📋 Diligenciar Formulario de Asistencia</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Botones de Acción: Descarga de Certificado y Reinicio -->
+          <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center max-w-md mx-auto">
+            <button 
+              id="btn-download-cert" 
+              type="button"
+              onclick="generateCertificatePDF()" 
+              class="w-full sm:flex-1 py-3.5 px-4 bg-gradient-to-r from-hogaru-primary to-hogaru-secondary hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-2 text-sm cursor-pointer min-h-[48px]"
+            >
+              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>Descargar Certificado (PDF)</span>
+            </button>
+
+            <button 
+              type="button"
+              onclick="restartChallenge()" 
+              class="w-full sm:w-auto py-3 px-5 border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold rounded-xl transition text-sm flex items-center justify-center gap-2 cursor-pointer min-h-[46px]"
+            >
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>Volver a jugar</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="relative z-10 w-full py-3 sm:py-4 text-center text-[10px] sm:text-xs text-slate-400 border-t border-slate-200/60 bg-white/50 backdrop-blur-xs px-2">
+    <p>Hogarú © 2026 • Seguridad y Salud en el Trabajo • La Mejor Versión 2026</p>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: LÓGICA DEL RETO, PREGUNTAS, FEEDBACK Y CERTIFICADO -->
+  <!-- ========================================================================= -->
+  <script>
+    // =========================================================================
+    // 👇 LINK OFICIAL DEL FORMULARIO DE ASISTENCIA GOOGLE FORMS 👇
+    // =========================================================================
+    const GOOGLE_FORMS_URL = "https://forms.gle/ZKpqjbp6S17wua7n9";
+    // =========================================================================
+
+    // Banco oficial de las 20 preguntas estructuradas en los 4 Bloques temáticos
+    const questions = [
+      // =======================================================================
+      // BLOQUE 1: IDENTIFICACIÓN DE PELIGROS Y CONDICIONES INSEGURAS (Q1-Q5)
+      // =======================================================================
+      {
+        block: "Bloque 1: Identificación de Peligros y Condiciones Inseguras",
+        title: "Pregunta 1. Inspección antes de comenzar",
+        scenario: "Antes de iniciar la limpieza en un servicio, observas que hay objetos extremadamente pesados en el piso, cables atravesandos que están haciendo corto en una zona de paso y muebles que dificultan el desplazamiento porque no se pueden mover. ¿Qué debes hacer?",
+        options: [
+          "Empezar por otra habitación y no informar sobre lo observado.",
+          "Identificar los riesgos, reportar las condiciones inseguras por el chat del servicio y esperar instrucciones sobre cómo proceder.",
+          "Mover todos los objetos y cables sin verificar si es seguro hacerlo.",
+          "Continuar con cuidado, porque los objetos del piso no representan un riesgo importante."
+        ],
+        correctIndex: 1,
+        feedbackCorrect: "¡Muy bien! Inspeccionar el área antes de iniciar permite identificar peligros y prevenir caídas, golpes y otras lesiones. Reporta las condiciones inseguras por el chat del servicio.",
+        feedbackIncorrect: "Comenzar sin evaluar los riesgos puede exponerte a caídas o golpes. Antes de actuar, identifica los peligros y repórtalos por el canal establecido."
+      },
+      {
+        block: "Bloque 1: Identificación de Peligros y Condiciones Inseguras",
+        title: "Pregunta 2. Escaleras no autorizadas",
+        scenario: "El cliente te solicita limpiar la parte superior de un armario, pero solamente tiene una silla y una escalera deteriorada. ¿Qué debes hacer?",
+        options: [
+          "Subirte a la silla si el mueble está cerca de una pared.",
+          "Utilizar la escalera deteriorada con ayuda del cliente.",
+          "No realizar la actividad en esas condiciones, reportar la situación por el chat y esperar instrucciones de la empresa.",
+          "Intentar limpiar desde el piso utilizando un objeto largo, aunque no sea apropiado para la tarea."
+        ],
+        correctIndex: 2,
+        feedbackCorrect: "¡Correcto! Para limpiar partes altas se requiere una escalera autorizada, en buen estado y con máximo tres pasos anchos. No utilices sillas, escaleras deterioradas ni implementos no autorizados.",
+        feedbackIncorrect: "Una silla, una escalera deteriorada o un implemento improvisado pueden provocar caídas. No improvises: reporta la condición y espera instrucciones."
+      },
+      {
+        block: "Bloque 1: Identificación de Peligros y Condiciones Inseguras",
+        title: "Pregunta 3. Planchado sin condiciones adecuadas",
+        scenario: "El cliente te pide planchar sobre la cama porque no dispone de una mesa para planchar. ¿Cuál es la decisión segura?",
+        options: [
+          "Aceptar, colocando una toalla sobre la cama.",
+          "Planchar sobre cualquier mesa disponible, aunque no sea apropiada.",
+          "Hacer el planchado rápidamente para reducir la exposición al calor.",
+          "No improvisar una superficie de planchado, reportar la situación y solicitar instrucciones."
+        ],
+        correctIndex: 3,
+        feedbackCorrect: "¡Bien hecho! El planchado requiere condiciones seguras. La cama u otras superficies no apropiadas aumentan el riesgo de quemaduras y accidentes. Reporta la novedad y espera instrucciones.",
+        feedbackIncorrect: "Cubrir la cama con una toalla o utilizar una mesa inadecuada no garantiza condiciones seguras. No improvises el lugar de planchado."
+      },
+      {
+        block: "Bloque 1: Identificación de Peligros y Condiciones Inseguras",
+        title: "Pregunta 4. Productos químicos desconocidos",
+        scenario: "El cliente te entrega un producto sin etiqueta y te pide utilizarlo para quitar una mancha difícil. ¿Qué debes hacer?",
+        options: [
+          "No utilizarlo, reportar por el chat del servicio la situación y solicitar instrucciones de la empresa.",
+          "Aplicar una pequeña cantidad para comprobar su efecto.",
+          "Mezclarlo con el producto habitual para reducir su concentración.",
+          "Utilizarlo si el cliente asegura que nunca ha tenido problemas."
+        ],
+        correctIndex: 0,
+        feedbackCorrect: "¡Exacto! No debes utilizar productos desconocidos o no autorizados, como cualquier tipo de Varsol o thinner o corrosivo. Su uso puede causar irritaciones, quemaduras o intoxicaciones. Reporta y sigue las instrucciones de la empresa.",
+        feedbackIncorrect: "Probar, mezclar o confiar únicamente en la palabra del cliente no elimina el riesgo. Utiliza solo productos autorizados y sigue los procedimientos establecidos."
+      },
+      {
+        block: "Bloque 1: Identificación de Peligros y Condiciones Inseguras",
+        title: "Pregunta 5. El cliente solicita continuar pese al riesgo",
+        scenario: "Identificas una condición insegura y la reportas. Mientras esperas respuesta, el cliente insiste en que debes realizar esa tarea de inmediato. ¿Cómo debes actuar?",
+        options: [
+          "Realizarla para evitar una queja del cliente.",
+          "Explicar que estás esperando instrucciones de la empresa, no realizar la actividad en esas condiciones y continuar con otra tarea segura.",
+          "Cancelar por tu cuenta todo el servicio sin informar a nadie.",
+          "Realizarla solamente si el cliente asume la responsabilidad."
+        ],
+        correctIndex: 1,
+        feedbackCorrect: "¡Correcto! Tu seguridad no debe depender de la presión del cliente. Informa que estás a la espera de instrucciones, realiza otra actividad segura y permanece atenta a la comunicación de SST.",
+        feedbackIncorrect: "La presión del cliente no elimina el peligro ni reemplaza las instrucciones de la empresa. No realices una tarea insegura; reporta y espera orientación."
+      },
+
+      // =======================================================================
+      // BLOQUE 2: COMPORTAMIENTOS SEGUROS Y USO DE EPP (Q6-Q10)
+      // =======================================================================
+      {
+        block: "Bloque 2: Comportamientos Seguros y Uso de EPP",
+        title: "Pregunta 6. Protección de las manos",
+        scenario: "Durante la limpieza de utensilios y mesones, ¿qué guantes debes utilizar según las instrucciones de trabajo seguro?",
+        options: [
+          "Guantes negros para todas las actividades, sin excepción.",
+          "Cualquier guante disponible, siempre que cubra las manos.",
+          "Guantes amarillos para utensilios y mesones, y guantes negros para las demás actividades, desinfectándolos después de cada uso.",
+          "Ninguno, si el producto de limpieza está diluido."
+        ],
+        correctIndex: 2,
+        feedbackCorrect: "¡Muy bien! Utilizar los guantes asignados a cada actividad y desinfectarlos después de cada uso ayuda a prevenir el contacto con agentes peligrosos y la contaminación entre áreas.",
+        feedbackIncorrect: "No todos los guantes se utilizan indistintamente. Respeta la asignación por actividad y desinféctalos después de cada uso."
+      },
+      {
+        block: "Bloque 2: Comportamientos Seguros y Uso de EPP",
+        title: "Pregunta 7. Protección de los ojos",
+        scenario: "Vas a preparar una disolución de un producto de limpieza. ¿Qué debes hacer para proteger tus ojos?",
+        options: [
+          "Utilizar gafas de protección durante la preparación de la disolución.",
+          "Cerrar los ojos mientras viertes el producto.",
+          "Utilizar gafas solamente si el producto tiene un olor fuerte.",
+          "Preparar la disolución rápidamente para reducir el tiempo de exposición."
+        ],
+        correctIndex: 0,
+        feedbackCorrect: "¡Correcto! Las gafas protegen los ojos frente a salpicaduras que pueden provocar irritación o quemaduras. Debes utilizarlas al preparar disoluciones y en las demás situaciones indicadas en el procedimiento.",
+        feedbackIncorrect: "El olor o la rapidez de la tarea no determinan si existe riesgo para los ojos. Utiliza las gafas cuando la actividad lo requiera."
+      },
+      {
+        block: "Bloque 2: Comportamientos Seguros y Uso de EPP",
+        title: "Pregunta 8. Protección respiratoria",
+        scenario: "Durante la limpieza del baño y la manipulación de residuos, ¿qué comportamiento ayuda a proteger tu salud?",
+        options: [
+          "Acercarte lo menos posible a los residuos, sin utilizar protección.",
+          "Utilizar únicamente el uniforme antifluido.",
+          "Utilizar el tapabocas solo cuando percibas un olor desagradable.",
+          "Utilizar el tapabocas, según las instrucciones de trabajo seguro."
+        ],
+        correctIndex: 3,
+        feedbackCorrect: "¡Bien! El tapabocas ayuda a proteger la boca y la nariz frente a agentes presentes durante actividades como la limpieza de baños y la manipulación de residuos.",
+        feedbackIncorrect: "El olor no permite determinar por sí solo si existe riesgo. Utiliza los elementos de protección requeridos para la actividad."
+      },
+      {
+        block: "Bloque 2: Comportamientos Seguros y Uso de EPP",
+        title: "Pregunta 9. Elementos de protección dañados",
+        scenario: "Antes de comenzar el servicio, notas que tus guantes están rotos y no tienes otros disponibles. ¿Qué debes hacer?",
+        options: [
+          "Utilizarlos hasta terminar el servicio.",
+          "Solicitar su reposición y no prestar el servicio sin los elementos de protección requeridos.",
+          "Cubrir la rotura con cinta adhesiva.",
+          "Evitar únicamente las tareas que parezcan más difíciles."
+        ],
+        correctIndex: 1,
+        feedbackCorrect: "¡Exacto! Los EPP actúan como barrera frente a los peligros. Si están dañados o se pierden, debes solicitar su reposición. Sin los elementos requeridos no puedes prestar el servicio.",
+        feedbackIncorrect: "Un EPP roto o reparado de manera improvisada puede dejarte expuesta. Solicita la reposición y sigue las instrucciones de la empresa."
+      },
+      {
+        block: "Bloque 2: Comportamientos Seguros y Uso de EPP",
+        title: "Pregunta 10. Prevención de golpes y caídas",
+        scenario: "Después de limpiar debajo de una superficie como gabinetes, vigas, muros o escaleras, necesitas levantarte. ¿Qué comportamiento reduce el riesgo de golpearte?",
+        options: [
+          "Levantarte rápidamente para evitar permanecer agachada.",
+          "Apoyarte en el primer mueble que encuentres.",
+          "Verificar si hay muebles u objetos cerca antes de incorporarte y levantarte de manera controlada para evitar golpes en la cabeza u otras partes del cuerpo.",
+          "Arrastrarte hasta encontrar espacio suficiente para levantarte."
+        ],
+        correctIndex: 2,
+        feedbackCorrect: "¡Muy bien! Antes de levantarte, revisa el espacio que te rodea. Esta acción sencilla ayuda a prevenir golpes contra muebles y otras superficies.",
+        feedbackIncorrect: "Levantarte sin verificar el entorno puede ocasionar golpes o pérdida del equilibrio. Observa el área y realiza el movimiento de manera controlada."
+      },
+
+      // =======================================================================
+      // BLOQUE 3: PREVENCIÓN DE LESIONES OSTEOMUSCULARES (Q11-Q15)
+      // =======================================================================
+      {
+        block: "Bloque 3: Prevención de Lesiones Osteomusculares",
+        title: "Pregunta 11. Pausas activas durante la limpieza",
+        scenario: "Durante la jornada de la mañana llevas aproximadamente una hora y media realizando tareas de limpieza. ¿Qué debes hacer según las instrucciones de trabajo seguro?",
+        options: [
+          "Continuar hasta terminar todas las tareas asignadas.",
+          "Realizar una pausa de diez minutos solo si el cliente lo autoriza.",
+          "Hacer una pausa únicamente cuando sientas dolor.",
+          "Realizar una pausa activa de diez minutos cada hora y media, según la programación establecida (o la recomendación de SST si tienes seguimiento de salud)."
+        ],
+        correctIndex: 3,
+        feedbackCorrect: "¡Correcto! El procedimiento indica pausas activas de diez minutos cada hora y media de servicio, aproximadamente a mitad de la jornada de la mañana y de la tarde. En caso de tener alguna condición de salud, el tiempo corresponde a la recomendación socializada por SST.",
+        feedbackIncorrect: "No debes esperar a sentir dolor para hacer las pausas. Sigue la frecuencia y duración definidas en el procedimiento de trabajo seguro."
+      },
+      {
+        block: "Bloque 3: Prevención de Lesiones Osteomusculares",
+        title: "Pregunta 12. Pausas durante el planchado",
+        scenario: "Estás realizando planchado de manera continua. ¿Cuál es la pauta establecida para las pausas activas durante esta actividad?",
+        options: [
+          "Realizar una pausa de diez minutos cada hora (o según la indicación de SST si tienes condición de salud en seguimiento).",
+          "Realizar una pausa de cinco minutos cada dos horas.",
+          "Realizar una pausa solamente al terminar toda la ropa.",
+          "Hacer pausas únicamente si aparece tensión en los hombros."
+        ],
+        correctIndex: 0,
+        feedbackCorrect: "¡Exactamente! Durante el planchado, el procedimiento establece una pausa de diez minutos cada hora. Cumplirla ayuda a interrumpir la exposición prolongada a la tarea.",
+        feedbackIncorrect: "Esperar hasta terminar o hasta sentir molestias no corresponde a la pauta establecida. Programa la pausa de diez minutos cada hora durante el planchado."
+      },
+      {
+        block: "Bloque 3: Prevención de Lesiones Osteomusculares",
+        title: "Pregunta 13. Posturas durante la limpieza",
+        scenario: "Mientras limpias una zona baja, permaneces mucho tiempo inclinada hacia adelante. ¿Cuál es la conducta más segura?",
+        options: [
+          "Mantener la misma postura para terminar más rápido.",
+          "Prestar atención a tu postura, evitar mantener posiciones forzadas y cambiar de posición cuando sea posible, respetando las pausas establecidas.",
+          "Compensar la postura inclinando la espalda hacia el lado contrario.",
+          "Continuar hasta sentir dolor muscular."
+        ],
+        correctIndex: 1,
+        feedbackCorrect: "¡Muy bien! Las posturas forzadas o prolongadas pueden generar tensión muscular. Presta atención a la forma en que realizas las tareas y aplica las medidas preventivas establecidas.",
+        feedbackIncorrect: "Mantener una postura forzada o esperar a sentir dolor aumenta la exposición al riesgo. Revisa tu postura y aplica las pausas y recomendaciones de trabajo seguro."
+      },
+      {
+        block: "Bloque 3: Prevención de Lesiones Osteomusculares",
+        title: "Pregunta 14. Manipulación de cargas",
+        scenario: "Debes mover un objeto pesado para limpiar debajo de él. ¿Qué debes hacer antes de intentar levantarlo?",
+        options: [
+          "Levantarlo rápidamente para reducir el esfuerzo total.",
+          "Girar la espalda mientras lo levantas para cambiarlo de posición.",
+          "Evaluar si puedes moverlo de manera segura, evitar movimientos forzados y solicitar ayuda u orientación si la tarea supera tus capacidades o los procedimientos autorizados.",
+          "Arrastrarlo sin verificar si el movimiento puede generar una lesión."
+        ],
+        correctIndex: 2,
+        feedbackCorrect: "¡Correcto! La manipulación de cargas y las posturas forzadas pueden producir lesiones osteomusculares. No improvises ni realices esfuerzos que superen tus capacidades; solicita apoyo cuando sea necesario.",
+        feedbackIncorrect: "Levantar rápidamente, girar la espalda o arrastrar objetos sin evaluar el riesgo puede aumentar la sobrecarga física. Evalúa la tarea y pide orientación si no puedes realizarla de forma segura."
+      },
+      {
+        block: "Bloque 3: Prevención de Lesiones Osteomusculares",
+        title: "Pregunta 15. Organización del trabajo",
+        scenario: "Tienes varias tareas pendientes y decides omitir las pausas activas para terminar el servicio más rápido. ¿Cuál es la mejor decisión?",
+        options: [
+          "Continuar sin pausas porque terminar a tiempo es lo más importante.",
+          "Hacer una pausa solo si el cliente lo autoriza.",
+          "Compensar las pausas al final de la jornada.",
+          "Organizar las tareas para cumplir las pausas establecidas y reportar por el chat del servicio cualquier dificultad para realizarlas."
+        ],
+        correctIndex: 3,
+        feedbackCorrect: "¡Bien hecho! Las pausas son una medida preventiva, no una actividad opcional que deba eliminarse por presión de tiempo. Organiza tus tareas y reporta las dificultades para que puedan gestionarse.",
+        feedbackIncorrect: "Omitir o aplazar las pausas no elimina la carga física. Cumple las pausas programadas y comunica oportunamente cualquier obstáculo."
+      },
+
+      // =======================================================================
+      // BLOQUE 4: REPORTE DE ACCIDENTES Y DECISIONES SEGURAS (Q16-Q20)
+      // =======================================================================
+      {
+        block: "Bloque 4: Reporte de Accidentes y Decisiones Seguras",
+        title: "Pregunta 16. Reporte de una lesión",
+        scenario: "Durante el servicio te golpeas una mano contra un mueble. El dolor parece leve y piensas que puedes continuar. ¿Qué debes hacer?",
+        options: [
+          "Reportar inmediatamente lo sucedido por el chat del servicio, describir brevemente el evento y estar atenta a las instrucciones de SST.",
+          "Esperar hasta llegar a casa para verificar si aparece dolor.",
+          "Informar únicamente al cliente.",
+          "Continuar y reportar solo si la lesión empeora al día siguiente."
+        ],
+        correctIndex: 0,
+        feedbackCorrect: "¡Correcto! Toda lesión ocurrida durante el servicio debe reportarse inmediatamente, aunque parezca leve. Esto permite activar la atención y documentar oportunamente lo sucedido.",
+        feedbackIncorrect: "Retrasar el reporte puede dificultar la verificación del evento y el acceso oportuno a la atención. Informa de inmediato y sigue las instrucciones de SST."
+      },
+      {
+        block: "Bloque 4: Reporte de Accidentes y Decisiones Seguras",
+        title: "Pregunta 17. Evidencia de un accidente",
+        scenario: "Tienes una herida o corte en un dedo mientras realizas una actividad durante el servicio. Según las instrucciones de reporte, ¿qué debes hacer?",
+        options: [
+          "Limpiar el corte y no informar si deja de sangrar.",
+          "Tomar una fotografía de la lesión, enviarla por el chat con una breve descripción, aplicar los primeros auxilios correspondientes y seguir las instrucciones de SST.",
+          "Esperar a que el cliente tome una fotografía y decida qué hacer.",
+          "Terminar el servicio antes de reportar."
+        ],
+        correctIndex: 1,
+        feedbackCorrect: "¡Muy bien! Reportar inmediatamente, aportar la evidencia disponible y seguir las indicaciones de SST permite gestionar el accidente. No subestimes ninguna lesión.",
+        feedbackIncorrect: "La lesión debe reportarse incluso si parece pequeña. No esperes a terminar el servicio ni dejes el reporte únicamente en manos del cliente."
+      },
+      {
+        block: "Bloque 4: Reporte de Accidentes y Decisiones Seguras",
+        title: "Pregunta 18. Reporte de una condición insegura",
+        scenario: "Encuentras un cable eléctrico deteriorado con peligro de corto circuito cerca de la zona donde debes limpiar. Tomas una fotografía y reportas la condición. ¿Qué debes hacer mientras recibes instrucciones?",
+        options: [
+          "Continuar con cuidado para terminar esa zona.",
+          "Cubrir el cable con una toalla para evitar el contacto.",
+          "No realizar la actividad en esa condición, informar al cliente que esperas instrucciones de la empresa, hacer otra tarea segura y atender las comunicaciones de SST.",
+          "Intentar reparar el cable si parece una avería sencilla."
+        ],
+        correctIndex: 2,
+        feedbackCorrect: "¡Exacto! No debes intervenir ni trabajar en una condición insegura. Reporta, evita la zona o actividad de riesgo, realiza otra tarea segura y permanece atenta a las instrucciones.",
+        feedbackIncorrect: "Cubrir o reparar un cable deteriorado no es una solución autorizada. No te expongas: reporta la condición y espera orientación."
+      },
+      {
+        block: "Bloque 4: Reporte de Accidentes y Decisiones Seguras",
+        title: "Pregunta 19. Animales en el lugar del servicio",
+        scenario: "Durante la limpieza, un perro o gato comienza a mostrar comportamiento agresivo y bloquea el acceso a la zona que debes limpiar. ¿Cuál es la mejor decisión?",
+        options: [
+          "Acercarte lentamente para que el animal se acostumbre a tu presencia.",
+          "Intentar sujetarlo o moverlo por tu cuenta.",
+          "Continuar la tarea utilizando guantes.",
+          "Mantener una distancia segura, no intentar manipular al animal y reportar la situación para recibir instrucciones."
+        ],
+        correctIndex: 3,
+        feedbackCorrect: "¡Bien! Los animales pueden ocasionar mordeduras y arañazos. No intentes manipular un animal que represente un riesgo. Reporta la situación y sigue las instrucciones recibidas.",
+        feedbackIncorrect: "Los guantes no eliminan el riesgo de mordeduras o arañazos. No intentes controlar al animal por tu cuenta; mantén la distancia y reporta la situación."
+      },
+      {
+        block: "Bloque 4: Reporte de Accidentes y Decisiones Seguras",
+        title: "Pregunta 20. Cierre del servicio y seguimiento",
+        scenario: "Durante el servicio reportaste una condición insegura que posteriormente fue revisada por SST. ¿Qué debes hacer al finalizar el servicio?",
+        options: [
+          "Calificar el servicio teniendo en cuenta la condición insegura, para formalizar el seguimiento a los compromisos establecidos.",
+          "No mencionar la condición porque ya fue revisada.",
+          "Calificar el servicio únicamente según la satisfacción del cliente.",
+          "Esperar a que SST vuelva a comunicarse para registrar lo sucedido."
+        ],
+        correctIndex: 0,
+        feedbackCorrect: "¡Correcto! Calificar el servicio considerando la condición reportada permite formalizar el seguimiento a los compromisos acordados entre el cliente y SST.",
+        feedbackIncorrect: "El reporte no termina cuando se revisa la condición. Calificar el servicio ayuda a documentar el seguimiento y verificar los compromisos establecidos."
+      }
+    ];
+
+    let participant = { name: '', role: '' };
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let correctCount = 0;
+
+    // Efectos de sonido procedurales con Web Audio API
+    let audioCtx = null;
+    function playTone(type) {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+
+        if (type === 'correct') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15); // G5
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'incorrect') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.linearRampToValueAtTime(190, now + 0.25);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'finish') {
+          const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+          notes.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = freq;
+            const startT = now + (idx * 0.1);
+            gain.gain.setValueAtTime(0.2, startT);
+            gain.gain.exponentialRampToValueAtTime(0.001, startT + 0.45);
+            osc.start(startT);
+            osc.stop(startT + 0.45);
+          });
+        }
+      } catch (e) {
+        // Silencioso en navegadores con restricciones de audio
+      }
+    }
+
+    function startChallenge(e) {
+      e.preventDefault();
+      const nameVal = document.getElementById('input-name').value.trim();
+      const roleVal = document.getElementById('input-role').value.trim();
+
+      if (!nameVal || !roleVal) return;
+
+      participant.name = nameVal;
+      participant.role = roleVal;
+
+      document.getElementById('screen-welcome').classList.add('hidden');
+      document.getElementById('screen-quiz').classList.remove('hidden');
+      document.getElementById('status-badge').classList.remove('hidden');
+
+      currentQuestionIndex = 0;
+      score = 0;
+      correctCount = 0;
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentQuestionIndex];
+
+      // Actualizar contadores y progreso
+      document.getElementById('current-q-number').textContent = currentQuestionIndex + 1;
+      const progressPct = ((currentQuestionIndex + 1) / questions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPct}%`;
+      
+      // Actualizar textos respetando jerarquía móvil
+      document.getElementById('question-block').textContent = q.block;
+      document.getElementById('badge-block-name').textContent = q.block.split(':')[0];
+      
+      document.getElementById('question-title-badge').textContent = q.title;
+      document.getElementById('question-scenario-box').textContent = q.scenario;
+
+      // Ocultar feedback previo y botón siguiente
+      const feedbackPanel = document.getElementById('feedback-panel');
+      feedbackPanel.classList.add('hidden');
+      feedbackPanel.className = 'hidden rounded-xl sm:rounded-2xl p-3.5 sm:p-4.5 border transition-all duration-300 mb-4 animate-fadeIn';
+      document.getElementById('btn-next').classList.add('hidden');
+      document.getElementById('btn-restart-early').classList.add('hidden');
+
+      // Inyectar opciones de respuesta con dimensiones táctiles móviles
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-card w-full text-left p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 border-slate-200 bg-white flex items-start gap-2.5 sm:gap-3 focus:outline-none cursor-pointer min-h-[50px]';
+        btn.onclick = () => selectOption(idx);
+
+        btn.innerHTML = `
+          <span class="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-100 font-bold text-xs sm:text-sm text-slate-700 flex items-center justify-center border border-slate-200 opt-letter mt-0.5">
+            ${letters[idx]}
+          </span>
+          <span class="text-xs sm:text-sm text-slate-700 font-medium leading-snug sm:leading-relaxed pt-0.5">
+            ${optText}
+          </span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIdx) {
+      const q = questions[currentQuestionIndex];
+      const buttons = document.querySelectorAll('#options-container button');
+
+      // Deshabilitar todos los botones para evitar doble clic
+      buttons.forEach(b => b.disabled = true);
+
+      const isCorrect = selectedIdx === q.correctIndex;
+      const feedbackPanel = document.getElementById('feedback-panel');
+      const feedbackTitle = document.getElementById('feedback-title');
+      const feedbackDesc = document.getElementById('feedback-desc');
+      const feedbackIcon = document.getElementById('feedback-icon');
+
+      if (isCorrect) {
+        correctCount++;
+        score += 50; // 50 puntos x 20 preguntas = 1000 puntos maximo
+        playTone('correct');
+
+        // Resaltar opción correcta
+        buttons[selectedIdx].classList.remove('border-slate-200', 'bg-white');
+        buttons[selectedIdx].classList.add('border-emerald-500', 'bg-emerald-50/70');
+        const badge = buttons[selectedIdx].querySelector('.opt-letter');
+        badge.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+
+        // Feedback positivo
+        feedbackPanel.classList.remove('hidden');
+        feedbackPanel.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-950');
+        feedbackIcon.textContent = '✅';
+        feedbackTitle.textContent = '¡Comportamiento Seguro! (+50 pts)';
+        feedbackDesc.textContent = q.feedbackCorrect;
+      } else {
+        playTone('incorrect');
+
+        // Resaltar error y mostrar opción correcta
+        buttons[selectedIdx].classList.remove('border-slate-200', 'bg-white');
+        buttons[selectedIdx].classList.add('border-rose-400', 'bg-rose-50/70');
+        const errBadge = buttons[selectedIdx].querySelector('.opt-letter');
+        errBadge.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+
+        buttons[q.correctIndex].classList.remove('border-slate-200', 'bg-white');
+        buttons[q.correctIndex].classList.add('border-emerald-500', 'bg-emerald-50/40');
+        const correctBadge = buttons[q.correctIndex].querySelector('.opt-letter');
+        correctBadge.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+
+        // Feedback pedagógico constructivo con advertencia de 100% requerido
+        feedbackPanel.classList.remove('hidden');
+        feedbackPanel.classList.add('bg-rose-50', 'border-rose-200', 'text-slate-800');
+        feedbackIcon.textContent = '⚠️';
+        feedbackTitle.textContent = 'Conducta a corregir / Riesgo identificado:';
+        feedbackDesc.innerHTML = `
+          <span>${q.feedbackIncorrect}</span>
+          <span class="block mt-2 p-2 bg-rose-100/90 rounded-lg sm:rounded-xl text-rose-900 font-bold text-[11px] sm:text-xs">
+            📢 Atención: Para habilitar el registro de asistencia y tu certificado debes responder las 20 situaciones correctamente (100%). Puedes continuar para aprender o reiniciar ahora.
+          </span>
+        `;
+
+        // Mostrar opción de reiniciar de inmediato si el usuario no desea esperar al final
+        document.getElementById('btn-restart-early').classList.remove('hidden');
+      }
+
+      // Actualizar marcador
+      document.getElementById('score-display').textContent = `${score} Puntos`;
+
+      // Habilitar botón de continuar y asegurar que sea visible en móviles
+      const btnNext = document.getElementById('btn-next');
+      btnNext.classList.remove('hidden');
+      
+      setTimeout(() => {
+        feedbackPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        renderQuestion();
+        // Desplazar arriba suavemente en móvil para nueva pregunta
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        showResultsScreen();
+      }
+    }
+
+    function showResultsScreen() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('screen-quiz').classList.add('hidden');
+      document.getElementById('screen-results').classList.remove('hidden');
+
+      const isPerfectScore = (correctCount === questions.length);
+      const percentage = Math.round((correctCount / questions.length) * 100);
+
+      document.getElementById('results-participant-name').textContent = participant.name;
+      document.getElementById('results-correct').textContent = correctCount;
+      document.getElementById('results-pct').textContent = `${percentage}% (${score}/1000 pts)`;
+      document.getElementById('results-progress-bar').style.width = `${percentage}%`;
+
+      const badgeElem = document.getElementById('results-badge');
+      const emojiElem = document.getElementById('results-emoji');
+      const mainTitle = document.getElementById('results-main-title');
+      const successPanel = document.getElementById('results-success-panel');
+      const retryPanel = document.getElementById('results-retry-panel');
+
+      if (isPerfectScore) {
+        // --- 100% DE ACIERTOS (20/20): ACCESO COMPLETO ---
+        playTone('finish');
+
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 100,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        }
+
+        emojiElem.textContent = '🏆';
+        mainTitle.textContent = '¡Excelente! Reto Superado con 100%';
+        badgeElem.textContent = '🌟 Embajador(a) Élite de Seguridad (20/20)';
+
+        // Mostrar asistencia y certificado
+        successPanel.classList.remove('hidden');
+        retryPanel.classList.add('hidden');
+
+        // Asegurar enlace al formulario oficial de Google Forms
+        const formsBtn = document.getElementById('link-google-forms');
+        if (formsBtn && GOOGLE_FORMS_URL) {
+          formsBtn.href = GOOGLE_FORMS_URL;
+        }
+      } else {
+        // --- HUBO ERRORES (< 20): BLOQUEO Y MENSAJE DE REPETIR ---
+        playTone('incorrect');
+
+        const errorsCount = questions.length - correctCount;
+        emojiElem.textContent = '🎯';
+        mainTitle.textContent = '¡Debes volver a realizar el ejercicio!';
+        badgeElem.textContent = `Aciertos: ${correctCount}/20 • Requiere 20/20`;
+
+        document.getElementById('errors-count-text').textContent = `${errorsCount} ${errorsCount === 1 ? 'pregunta incorrecta' : 'preguntas incorrectas'}`;
+
+        // Ocultar certificado y formulario; mostrar panel de reintento
+        successPanel.classList.add('hidden');
+        retryPanel.classList.remove('hidden');
+      }
+    }
+
+    function generateCertificatePDF() {
+      // Validación de seguridad adicional: no emitir si no obtuvo 20/20
+      if (correctCount < questions.length) {
+        alert("Debes responder todas las 20 preguntas correctamente para obtener el certificado.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      // Formato apaisado A4 (297 x 210 mm)
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const width = 297;
+      const height = 210;
+
+      // Fondo suave corporativo
+      doc.setFillColor(248, 250, 252);
+      doc.rect(0, 0, width, height, 'F');
+
+      // Marco exterior azul principal
+      doc.setDrawColor(0, 132, 255);
+      doc.setLineWidth(1.2);
+      doc.roundedRect(10, 10, width - 20, height - 20, 6, 6, 'D');
+
+      // Marco interior azul secundario
+      doc.setDrawColor(0, 65, 135);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(13, 13, width - 26, height - 26, 4, 4, 'D');
+
+      // Detalles ornamentales circulares
+      doc.setFillColor(0, 132, 255);
+      doc.circle(width - 24, 24, 5, 'F');
+      doc.setFillColor(0, 65, 135);
+      doc.circle(24, height - 24, 4, 'F');
+
+      // Isotipo circular Hogarú
+      doc.setFillColor(0, 65, 135);
+      doc.circle(width / 2, 29, 9, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(255, 255, 255);
+      doc.text('H', width / 2, 32.5, { align: 'center' });
+
+      // Cabecera Institucional
+      doc.setFontSize(18);
+      doc.setTextColor(0, 65, 135);
+      doc.setFont('helvetica', 'bold');
+      doc.text('H O G A R Ú', width / 2, 44, { align: 'center' });
+
+      doc.setFontSize(9.5);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'normal');
+      doc.text('SEGURIDAD BASADA EN EL COMPORTAMIENTO | LA MEJOR VERSIÓN 2026', width / 2, 50, { align: 'center' });
+
+      // Título de la Certificación
+      doc.setFontSize(22);
+      doc.setTextColor(0, 132, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text('CERTIFICADO DE PARTICIPACIÓN', width / 2, 63, { align: 'center' });
+
+      doc.setFontSize(10.5);
+      doc.setTextColor(71, 85, 105);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Talento Humano y el área de Seguridad y Salud en el Trabajo (SST) certifican que:', width / 2, 71, { align: 'center' });
+
+      // Nombre del Colaborador
+      doc.setFontSize(22);
+      doc.setTextColor(15, 23, 42);
+      doc.setFont('helvetica', 'bold');
+      doc.text((participant.name || 'PROFESIONAL DE LIMPIEZA').toUpperCase(), width / 2, 84, { align: 'center' });
+
+      // Línea divisoria elegante
+      doc.setDrawColor(0, 132, 255);
+      doc.setLineWidth(0.6);
+      doc.line(60, 87, width - 60, 87);
+
+      // Cargo / Rol
+      doc.setFontSize(10.5);
+      doc.setTextColor(100, 116, 139);
+      doc.setFont('helvetica', 'italic');
+      doc.text(`Cargo / Rol: ${participant.role || 'Profesional de Limpieza'}`, width / 2, 93, { align: 'center' });
+
+      // Mensaje Motivador y de Reconocimiento
+      doc.setFontSize(10);
+      doc.setTextColor(51, 65, 85);
+      doc.setFont('helvetica', 'normal');
+      const certMessage = `Por haber completado con éxito la actividad interactiva del Reto: "Comportamiento Seguro: Yo Elijo Cuidarme", demostrando compromiso activo en la identificación oportuna de peligros, el uso adecuado de EPPs, la prevención de lesiones osteomusculares y el reporte inmediato de condiciones inseguras.`;
+      const splitMsg = doc.splitTextToSize(certMessage, 215);
+      doc.text(splitMsg, width / 2, 105, { align: 'center' });
+
+      // Cuadro de Resumen de Compromisos y Aprobación
+      doc.setFillColor(239, 246, 255);
+      doc.setDrawColor(186, 230, 253);
+      doc.setLineWidth(0.5);
+      doc.roundedRect((width / 2) - 100, 122, 200, 18, 3, 3, 'FD');
+
+      doc.setFontSize(9.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0, 65, 135);
+      doc.text('“Cuidar de tu vida y salud en cada servicio es nuestra mayor prioridad”', width / 2, 131, { align: 'center' });
+
+      const certPct = Math.round((correctCount / questions.length) * 100);
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(71, 85, 105);
+      doc.text(`Aciertos: ${correctCount} / 20 (${certPct}%) • Calificación: ${score} pts`, width / 2, 136, { align: 'center' });
+
+      // Fecha
+      const dateStr = new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+      doc.setFontSize(8.5);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Constancia emitida el ${dateStr}`, width / 2, 149, { align: 'center' });
+
+      // Firmas Institucionales
+      const sigY = 168;
+      doc.setDrawColor(148, 163, 184);
+      doc.setLineWidth(0.4);
+
+      // Firma 1: Talento Humano y SST
+      doc.line(45, sigY, 115, sigY);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text('Talento Humano y SST', 80, sigY + 5, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Seguridad Basada en el Comportamiento', 80, sigY + 9, { align: 'center' });
+
+      // Firma 2: La Mejor Versión 2026
+      doc.line(width - 115, sigY, width - 45, sigY);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(15, 23, 42);
+      doc.text('La Mejor Versión 2026', width - 80, sigY + 5, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 116, 139);
+      doc.text('Hogarú Colombia', width - 80, sigY + 9, { align: 'center' });
+
+      // Valores corporativos de marca al pie
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.setFont('helvetica', 'italic');
+      doc.text('Empatía • Comunicación asertiva • Experimentación • Autogestión | www.hogaru.com', width / 2, 196, { align: 'center' });
+
+      // Guardar PDF
+      const sanitizedName = (participant.name || 'Participante').replace(/[^a-zA-Z0-9]/g, '_');
+      doc.save(`Certificado_Comportamientos_Salvan_Vidas_${sanitizedName}.pdf`);
+    }
+
+    function restartChallenge() {
+      currentQuestionIndex = 0;
+      score = 0;
+      correctCount = 0;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('status-badge').classList.add('hidden');
+      document.getElementById('screen-results').classList.add('hidden');
+      document.getElementById('screen-welcome').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
